@@ -1,27 +1,16 @@
 use actix_identity::*;
-use actix_web::cookie::time::OffsetDateTime;
-use actix_web::cookie::Cookie;
-use actix_web::cookie::*;
 use actix_web::web;
 use actix_web::Error;
 use actix_web::HttpMessage;
 use actix_web::HttpRequest;
 use actix_web::HttpResponse;
 use bcrypt::verify;
-use rand::distributions::Alphanumeric;
-use rand::Rng;
 use rustyroad::database::Database;
 use serde::Deserialize;
 use sqlx::PgPool;
 
 use tera::Context;
 use tera::Tera;
-
-// Added chrono for handling DateTime
-use chrono::offset::Utc;
-use chrono::Duration;
-
-use crate::routes::dashboard;
 
 #[derive(Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
@@ -102,11 +91,7 @@ impl UserLogin {
         }
     }
 
-    pub async fn user_logout(
-        tmpl: web::Data<Tera>,
-        user: Identity,
-        req: HttpRequest,
-    ) -> Result<HttpResponse, Error> {
+    pub async fn user_logout(tmpl: web::Data<Tera>, user: Identity) -> Result<HttpResponse, Error> {
         user.logout();
 
         let mut context = Context::new();
