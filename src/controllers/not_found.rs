@@ -1,5 +1,4 @@
-use actix_web::Error;
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::{get, web, HttpResponse};
 use tera::Tera;
 
 #[get("/not_found")]
