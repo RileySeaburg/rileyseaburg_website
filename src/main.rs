@@ -11,6 +11,8 @@ use openssl::{
     ssl::{SslAcceptor, SslMethod},
 };
 use std::env;
+use std::fs::File;
+use std::io::Read;
 
 use actix_identity::IdentityMiddleware;
 use rustyroad::database::Database;
