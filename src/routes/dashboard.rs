@@ -1,5 +1,5 @@
 use actix_identity::Identity;
-use actix_web::{get, web, Error, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, web, HttpResponse};
 
 use tera::{Context, Tera};
 
