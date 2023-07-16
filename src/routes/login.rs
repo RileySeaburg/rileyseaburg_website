@@ -1,5 +1,3 @@
-use std::result;
-
 use crate::models;
 use actix_identity::Identity;
 use actix_web::{get, post, web, Error, HttpRequest, HttpResponse};
@@ -26,10 +24,6 @@ async fn login_function(
 }
 
 #[get("/logout")]
-async fn user_logout(
-    tmpl: web::Data<Tera>,
-    req: HttpRequest, // Add the HttpRequest
-    user: Identity,
-) -> Result<HttpResponse, Error> {
-    UserLogin::user_logout(tmpl, user, req).await
+async fn user_logout(tmpl: web::Data<Tera>, user: Identity) -> Result<HttpResponse, Error> {
+    UserLogin::user_logout(tmpl, user).await
 }
