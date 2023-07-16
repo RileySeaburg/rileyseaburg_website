@@ -1,4 +1,7 @@
+use std::result;
+
 use crate::models;
+use actix_identity::Identity;
 use actix_web::{get, post, web, Error, HttpRequest, HttpResponse};
 use models::user::UserLogin;
 use rustyroad::database::Database;
@@ -15,18 +18,18 @@ async fn login_route(tmpl: web::Data<Tera>) -> HttpResponse {
 #[post("/login")]
 async fn login_function(
     form: web::Form<UserLogin>,
-    tmpl: web::Data<Tera>,   // Updated line
-    db: web::Data<Database>, // receive Database as web::Data<Database>
+    tmpl: web::Data<Tera>,
+    db: web::Data<Database>,
+    req: HttpRequest,
 ) -> Result<HttpResponse, actix_web::Error> {
-    // get database data from rustyroad.toml
-    form.user_login(tmpl, &db.get_ref().clone()).await
+    form.user_login(tmpl, &db.get_ref().clone(), req).await
 }
 
 #[get("/logout")]
 async fn user_logout(
     tmpl: web::Data<Tera>,
     req: HttpRequest, // Add the HttpRequest
+    user: Identity,
 ) -> Result<HttpResponse, Error> {
-    let database = rustyroad::database::Database::get_database_from_rustyroad_toml().unwrap();
-    UserLogin::user_logout(tmpl, database, req).await
+    UserLogin::user_logout(tmpl, user, req).await
 }
