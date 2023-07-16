@@ -6,7 +6,10 @@ use actix_web::{
     web::{self},
     App, HttpServer,
 };
-use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
+use openssl::{
+    pkey::{PKey, Private},
+    ssl::{SslAcceptor, SslMethod},
+};
 use std::env;
 
 use actix_identity::IdentityMiddleware;
@@ -28,15 +31,21 @@ fn get_secret_key() -> Result<Key, Box<dyn std::error::Error>> {
     Ok(key)
 }
 
+fn load_encrypted_private_key() -> PKey<Private> {
+    let mut file = File::open("/etc/letsencrypt/live/rileyseaburg.com/privkey.pem").unwrap();
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).expect("Failed to read file");
+
+    PKey::private_key_from_pem_passphrase(&buffer, b"").unwrap()
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
     builder
-        .set_private_key_file(
-            "/etc/letsencrypt/live/rileyseaburg.com/privkey.pem",
-            SslFiletype::PEM,
-        )
+        .set_private_key(&load_encrypted_private_key())
         .unwrap();
+
     builder
         .set_certificate_chain_file("/etc/letsencrypt/live/rileyseaburg.com/fullchain.pem")
         .unwrap();
@@ -46,7 +55,7 @@ async fn main() -> std::io::Result<()> {
 
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());
 
-    println!("Starting Actix web server...");
+    log::info!("starting HTTPS server at http://localhost:8443");
 
     HttpServer::new(move || {
         // Load tera templates from the specified directory
@@ -78,7 +87,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::not_found::not_found)
             .service(Files::new("/static", "./static")) // Add this line
     })
-    .bind_openssl("0.0.0.0:443", builder)?
+    .bind_openssl("127.0.0.1:8443", builder)?
     .unwrap()
     .workers(2)
     .run()
