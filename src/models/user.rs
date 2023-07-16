@@ -1,8 +1,10 @@
+use actix_identity::*;
 use actix_web::cookie::time::OffsetDateTime;
 use actix_web::cookie::Cookie;
 use actix_web::cookie::*;
 use actix_web::web;
 use actix_web::Error;
+use actix_web::HttpMessage;
 use actix_web::HttpRequest;
 use actix_web::HttpResponse;
 use bcrypt::verify;
@@ -18,6 +20,8 @@ use tera::Tera;
 // Added chrono for handling DateTime
 use chrono::offset::Utc;
 use chrono::Duration;
+
+use crate::routes::dashboard;
 
 #[derive(Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
@@ -51,6 +55,7 @@ impl UserLogin {
         &self,
         tmpl: web::Data<Tera>,
         database: &Database,
+        request: HttpRequest,
     ) -> Result<HttpResponse, Error> {
         let mut ctx = Context::new();
 
@@ -71,60 +76,15 @@ impl UserLogin {
                 match verify(&self.password, &hashed_password) {
                     Ok(password_match) => {
                         if password_match {
-                            // Generate a new session token
-                            let session_token: String = rand::thread_rng()
-                                .sample_iter(&Alphanumeric)
-                                .take(30)
-                                .map(char::from)
-                                .collect();
+                            // Here you can set the identity directly
+                            Identity::login(&request.extensions(), self.username.clone()).unwrap();
 
-                            let expires = OffsetDateTime::now_utc() + time::Duration::days(1);
+                            ctx.insert("username", &self.username.clone());
 
-                            // Set the session token in a cookie
-                            let mut session_cookie =
-                                Cookie::new("session_token", session_token.clone());
-                            session_cookie.set_secure(false); // Set to true if using HTTPS
-                            session_cookie.set_http_only(true);
-                            session_cookie.set_same_site(actix_web::cookie::SameSite::Strict);
-                            session_cookie.set_expires(expires);
-
-                            // Set the session token cookie in the response
-                            let mut response = HttpResponse::Ok().body("Login successful!");
-                            response.add_cookie(&session_cookie).unwrap();
-
-                            // Set the session expiration date to 1 day from now
-                            let expiration_date = Utc::now() + Duration::days(1);
-
-                            // Insert the new session into the database
-                            let result = sqlx::query(
-                                "INSERT INTO Sessions (user_id, session_token, expiration_date) VALUES ((SELECT id FROM Users WHERE username = $1), $2, $3)",
-                            )
-                            .bind(&self.username)
-                            .bind(&session_token)
-                            .bind(expiration_date)
-                            .execute(&db_pool)
-                            .await;
-
-                            match result {
-                                Ok(rows_affected) => {
-                                    if rows_affected.rows_affected() == 0 {
-                                        // Handle the case where no rows were affected (e.g., log an error or return an error message)
-                                        ctx.insert("error", "Failed to create a new session");
-                                        let rendered =
-                                            tmpl.render("pages/login.html.tera", &ctx).unwrap();
-                                        return Ok(HttpResponse::Ok().body(rendered));
-                                    } else {
-                                        ctx.insert("username", &self.username);
-                                        ctx.insert("session_token", &session_token);
-                                        let rendered =
-                                            tmpl.render("pages/dashboard.html.tera", &ctx).unwrap();
-                                        return Ok(HttpResponse::Ok().body(rendered));
-                                    }
-                                }
-                                Err(e) => {
-                                    panic!("Failed to execute query: {}", e);
-                                }
-                            }
+                            let body = tmpl.render("pages/dashboard.html.tera", &ctx).unwrap();
+                            return Ok(HttpResponse::Ok()
+                                .append_header((actix_web::http::header::LOCATION, "/dashboard"))
+                                .body(body));
                         } else {
                             ctx.insert("error", "Invalid username or password");
                             let rendered = tmpl.render("pages/login.html.tera", &ctx).unwrap();
@@ -144,51 +104,15 @@ impl UserLogin {
 
     pub async fn user_logout(
         tmpl: web::Data<Tera>,
-        database: Database,
+        user: Identity,
         req: HttpRequest,
     ) -> Result<HttpResponse, Error> {
-        let mut ctx = Context::new();
+        user.logout();
 
-        // Create the database URL
-        let database_url = format!(
-            "postgres://{}:{}@{}:{}/{}",
-            database.username, database.password, database.host, database.port, database.name
-        );
-
-        // Create the database connection pool
-        let db_pool = PgPool::connect(&database_url)
-            .await
-            .expect("Failed to connect to Postgres.");
-
-        // Retrieve the session token from the cookies
-        let session_token = req
-            .cookie("session_token")
-            .map(|cookie| cookie.value().to_string());
-
-        if let Some(token) = session_token {
-            // Delete the session from the database
-            let result = sqlx::query("DELETE FROM Sessions WHERE session_token = ?")
-                .bind(&token)
-                .execute(&db_pool)
-                .await;
-
-            match result {
-                Ok(_) => {
-                    // Remove the session token cookie from the response
-                    let mut response = HttpResponse::Ok().body("Logout successful!");
-                    response.del_cookie("session_token");
-
-                    let rendered = tmpl.render("pages/login.html.tera", &ctx).unwrap();
-                    return Ok(HttpResponse::Ok().body(rendered));
-                }
-                Err(e) => {
-                    panic!("Failed to delete session from database: {}", e);
-                }
-            }
-        } else {
-            ctx.insert("error", "No session token found");
-            let rendered = tmpl.render("pages/login.html.tera", &ctx).unwrap();
-            return Ok(HttpResponse::Ok().body(rendered));
-        }
+        let mut context = Context::new();
+        context.insert("route_name", "login");
+        context.insert("message", "You have been logged out.");
+        let rendered = tmpl.render("pages/login.html.tera", &context).unwrap();
+        Ok(HttpResponse::Ok().body(rendered))
     }
 }
