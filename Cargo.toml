@@ -26,6 +26,7 @@ dotenv = "0.15.0"
 bcrypt = "0.14.0"
 pin-project-lite = "0.2.10"
 actix-identity = "0.5.2"
+openssl = "0.10.55"
 [dependencies.sqlx]
 features = ["postgres", "macros", "chrono", "json", "uuid", "offline"]
 version = "0.6.2"

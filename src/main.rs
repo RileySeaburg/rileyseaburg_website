@@ -1,5 +1,3 @@
-use std::env;
-
 use actix_files::Files;
 use actix_session::storage::CookieSessionStore;
 use actix_session::SessionMiddleware;
@@ -8,6 +6,8 @@ use actix_web::{
     web::{self},
     App, HttpServer,
 };
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
+use std::env;
 
 use actix_identity::IdentityMiddleware;
 use rustyroad::database::Database;
@@ -30,6 +30,17 @@ fn get_secret_key() -> Result<Key, Box<dyn std::error::Error>> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
+    builder
+        .set_private_key_file(
+            "/etc/letsencrypt/live/rileyseaburg.com/privkey.pem",
+            SslFiletype::PEM,
+        )
+        .unwrap();
+    builder
+        .set_certificate_chain_file("/etc/letsencrypt/live/rileyseaburg.com/fullchain.pem")
+        .unwrap();
+
     dotenv::dotenv().ok();
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("debug")).init();
 
@@ -67,7 +78,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::not_found::not_found)
             .service(Files::new("/static", "./static")) // Add this line
     })
-    .bind(("127.0.0.1", 8080))
+    .bind_openssl("0.0.0.0:443", builder)?
     .unwrap()
     .workers(2)
     .run()
