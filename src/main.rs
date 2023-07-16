@@ -9,7 +9,7 @@ use actix_web::{
     App, HttpServer,
 };
 
-use actix_identity::{Identity, IdentityMiddleware};
+use actix_identity::IdentityMiddleware;
 use rustyroad::database::Database;
 use tera::Tera;
 mod controllers;
