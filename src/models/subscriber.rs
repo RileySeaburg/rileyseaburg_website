@@ -25,6 +25,6 @@ impl Subscriber {
     }
 }
 
-pub struct NewsletterForm {a
+pub struct NewsletterForm {
     pub email: String,
 }
