@@ -7,5 +7,4 @@ pub use login::*;
 pub mod not_found;
 pub use not_found::*;
 pub mod newsletter;
-pub use newsletter::*;pub mod subscriber;
-pub use subscriber::*;
+pub use newsletter::*;
