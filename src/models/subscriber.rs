@@ -16,6 +16,7 @@ impl Subscriber {
     }
 
     pub async fn insert(&self, conn: &mut PgConnection) -> Result<(), sqlx::Error> {
+
         sqlx::query!("INSERT INTO Subscribers (email) VALUES ($1)", self.email)
             .execute(conn)
             .await?;

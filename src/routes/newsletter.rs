@@ -1,7 +1,7 @@
 use actix_web::{get, post, web, HttpResponse, Responder};
 use rustyroad::database::Database;
 use tera::{Context, Tera};
-use crate::models::Subscriber;
+use crate::models::{NewsletterForm, Subscriber};
 
 #[get("/newsletter")]
 async fn newsletter(tmpl: web::Data<Tera>) -> impl Responder {
@@ -23,7 +23,7 @@ async fn newsletter_post(tmpl: web::Data<Tera>, form: web::Form<NewsletterForm>)
     // insert the new subscriber into the database
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());
 
-    let mut conn = database.get_conn().unwrap();
+    let mut conn = database.as_ref().get_connection().await.unwrap();
 
     let result = newSubscriber.insert(&mut conn);
 
