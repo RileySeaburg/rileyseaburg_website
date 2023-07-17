@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::PgConnection;
+use sqlx::{PgConnection, Pool, Postgres};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Subscriber {
@@ -15,7 +15,7 @@ impl Subscriber {
         }
     }
 
-    pub async fn insert(&self, conn: &mut PgConnection) -> Result<(), sqlx::Error> {
+    pub async fn insert(&self, conn: &mut Pool<Postgres>) -> Result<(), sqlx::Error> {
 
         sqlx::query!("INSERT INTO Subscribers (email) VALUES ($1)", self.email)
             .execute(conn)
@@ -25,6 +25,6 @@ impl Subscriber {
     }
 }
 
-pub struct NewsletterForm {
+pub struct NewsletterForm {a
     pub email: String,
 }

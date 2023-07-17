@@ -1,5 +1,6 @@
 use actix_web::{get, post, web, HttpResponse, Responder};
 use rustyroad::database::Database;
+use sqlx::PgPool;
 use tera::{Context, Tera};
 use crate::models::{NewsletterForm, Subscriber};
 
@@ -23,7 +24,19 @@ async fn newsletter_post(tmpl: web::Data<Tera>, form: web::Form<NewsletterForm>)
     // insert the new subscriber into the database
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());
 
-    let mut conn = database.as_ref().get_connection().await.unwrap();
+    // Create the database URL
+    let database_url = format!(
+        "postgres://{}:{}@{}:{}/{}",
+        database.username,
+        database.password,
+        database.host,
+        database.port,
+        database.name
+    );
+
+    let mut conn = PgPool::connect(&database_url)
+        .await
+        .expect("Failed to connect to Postgres.");
 
     let result = newSubscriber.insert(&mut conn);
 
