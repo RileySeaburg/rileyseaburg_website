@@ -57,7 +57,7 @@ async fn main() -> std::io::Result<()> {
 
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());
 
-    log::info!("starting HTTPS server at http://localhost:8443");
+    log::info!("starting HTTPS server at https://rileyseaburg.com/");
 
     HttpServer::new(move || {
         // Load tera templates from the specified directory
@@ -89,7 +89,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::not_found::not_found)
             .service(Files::new("/static", "./static")) // Add this line
     })
-    .bind_openssl("127.0.0.1:8443", builder)?
+    .bind_openssl("0.0.0.0:443", builder)?
     .workers(2)
     .run()
     .await
