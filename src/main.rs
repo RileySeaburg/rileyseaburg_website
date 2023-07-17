@@ -90,7 +90,6 @@ async fn main() -> std::io::Result<()> {
             .service(Files::new("/static", "./static")) // Add this line
     })
     .bind_openssl("127.0.0.1:8443", builder)?
-    .unwrap()
     .workers(2)
     .run()
     .await
