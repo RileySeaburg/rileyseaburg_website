@@ -1,5 +1,6 @@
+use rustyroad::database::DatabaseConnection;
 use serde::{Deserialize, Serialize};
-use sqlx::{PgConnection, Pool, Postgres};
+use sqlx::{Pool, Postgres};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Subscriber {
@@ -16,10 +17,30 @@ impl Subscriber {
     }
 
     pub async fn insert(&self, conn: &mut Pool<Postgres>) -> Result<(), sqlx::Error> {
+        let connection = Database::create_database_connection(&database)
+            .await
+            .unwrap_or_else(|why| {
+                panic!("Couldn't create database connection: {}", why.to_string())
+            });
 
-        sqlx::query!("INSERT INTO Subscriber (email) VALUES ($1)", self.email)
-            .execute(conn)
-            .await?;
+        match connection.clone() {
+            DatabaseConnection::Pg(connection) => {
+                println!("Executing query: {:?}", sql.clone().as_str());
+                //unwrap the arc
+                let rows_affected = connection.execute(sql.as_str()).await?;
+                println!("{:?} rows affected", rows_affected);
+            }
+            DatabaseConnection::MySql(connection) => {
+                println!("Executing query: {:?}", sql);
+                let rows_affected = connection.execute(sql.as_str()).await?;
+                println!("{:?} rows affected", rows_affected);
+            }
+            DatabaseConnection::Sqlite(connection) => {
+                println!("Executing query: {:?}", sql);
+                let rows_affected = connection.execute(sql.as_str()).await?;
+                println!("{:?} rows affected", rows_affected);
+            }
+        };
 
         Ok(())
     }
