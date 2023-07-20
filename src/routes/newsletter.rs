@@ -37,22 +37,24 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
 
     let result = newSubscriber.insert(&mut conn);
 
+    struct JSONResoponse {
+        message: String,
+    }
+
+    let json_response = JSONResoponse {
+        message: "There was an error subscribing to the newsletter.".to_string(),
+    };
+
     match result.await {
         Ok(_) => {
-            context.insert(
-                "message",
-                "You have successfully subscribed to the newsletter.",
-            );
+            json_response.message = "You have successfully subscribed to the newsletter.".to_string()
         }
         Err(_) => {
-            context.insert(
-                "message",
-                "There was an error subscribing to the newsletter.",
-            );
+            json_response.message = "There was an error subscribing to the newsletter.".to_string()
         }
     }
 
     // create json response for the user
 
-    HttpResponse::Ok().json(&context)
+    HttpResponse::Ok().json(json_response)
 }
