@@ -3,7 +3,6 @@ use actix_web::{get, post, web, HttpResponse, Responder};
 use rustyroad::database::Database;
 use sqlx::PgPool;
 use tera::{Context, Tera};
-use serde_json;
 
 #[get("/newsletter")]
 async fn newsletter(tmpl: web::Data<Tera>) -> impl Responder {
@@ -38,7 +37,7 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
 
     let result = newSubscriber.insert(&mut conn);
 
-    #[derive(serde::Serialize, serde::Deserialize, serde_json)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     struct JSONResoponse {
         message: String,
     }
