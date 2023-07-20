@@ -88,6 +88,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::login::user_logout)
             .service(routes::not_found::not_found)
             .service(routes::newsletter::newsletter)
+            .service(routes::newsletter::newsletter_post)
             .service(Files::new("/static", "./static")) // Add this line
     })
     .bind_openssl("0.0.0.0:443", builder)?
