@@ -43,7 +43,7 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
         message: String,
     }
 
-    let json_response = JSONResoponse {
+    let mut json_response = JSONResoponse {
         message: "There was an error subscribing to the newsletter.".to_string(),
     };
 
