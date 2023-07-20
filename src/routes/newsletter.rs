@@ -3,7 +3,7 @@ use actix_web::{get, post, web, HttpResponse, Responder};
 use rustyroad::database::Database;
 use sqlx::PgPool;
 use tera::{Context, Tera};
-use serde_json::json;
+use serde_json;
 
 #[get("/newsletter")]
 async fn newsletter(tmpl: web::Data<Tera>) -> impl Responder {
