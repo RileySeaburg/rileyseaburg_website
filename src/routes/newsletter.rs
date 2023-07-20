@@ -38,7 +38,7 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
 
     let result = newSubscriber.insert(&mut conn);
 
-    #[derive(serde::Serialize, serde::Deserialize, serde_json::value)]
+    #[derive(serde::Serialize, serde::Deserialize, serde_json)]
     struct JSONResoponse {
         message: String,
     }
