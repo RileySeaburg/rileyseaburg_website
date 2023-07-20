@@ -1,4 +1,4 @@
-use rustyroad::database::DatabaseConnection;
+use rustyroad::database::{Database, DatabaseConnection};
 use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres};
 
@@ -17,6 +17,8 @@ impl Subscriber {
     }
 
     pub async fn insert(&self, conn: &mut Pool<Postgres>) -> Result<(), sqlx::Error> {
+        let database: Database = Database::get_database_from_rustyroad_toml().expect("Couldn't parse the rustyroad.toml file. Please check the documentation for a proper implementation.");
+        let sql = format!("INSERT INTO Subscriber (email) VALUES ('{}')", self.email);
         let connection = Database::create_database_connection(&database)
             .await
             .unwrap_or_else(|why| {
