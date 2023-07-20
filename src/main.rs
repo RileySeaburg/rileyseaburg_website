@@ -72,11 +72,11 @@ async fn main() -> std::io::Result<()> {
             .build();
 
         App::new()
-            .wrap(
-                actix_web::middleware::Logger::default()
-                    .exclude("/static")
-                    .exclude("/favicon.ico"),
-            )
+            // .wrap(
+            //     actix_web::middleware::Logger::default()
+            //         .exclude("/static")
+            //         .exclude("/favicon.ico"),
+            // )
             .wrap(IdentityMiddleware::default())
             .app_data(database.clone())
             .wrap(session_mw)
