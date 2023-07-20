@@ -36,12 +36,53 @@
                 agreeing to allow me to perodically email you.
               </p>
             </form>
+            <div id="success-message"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+
+  let form = document.querySelector('form');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let email = document.querySelector('#email').value;
+    let successMessage = document.querySelector('#success-message');
+    // send email to server
+    let data = {
+      email: email
+    };
+
+    fetch('/newsletter', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Something went wrong');
+      }
+    }).then((data) => {
+      console.log(data);
+      form.reset();
+      // set success message and then remove it after 5 seconds
+      successMessage.innerHTML = '<div class="text-green-500">Success! You have been added to the mailing list.</div>';
+      setTimeout(() => {
+        successMessage.innerHTML = '';
+      }, 5000);
+    }).catch((error) => {
+      console.log(error);
+      alert('Something went wrong, please try again later.');
+    });
+  });
+
+</script>
 
 <main>
   <!-- Feature section with screenshot -->
