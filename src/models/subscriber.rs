@@ -49,6 +49,7 @@ impl Subscriber {
     }
 }
 
+#[derive(Deserialize, Serialize, Debug)]
 pub struct NewsletterForm {
     pub email: String,
 }
