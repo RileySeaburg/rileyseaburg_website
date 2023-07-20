@@ -52,9 +52,7 @@
     let email = document.querySelector('#email').value;
     let successMessage = document.querySelector('#success-message');
     // send email to server
-    let data = {
-      email: email
-    };
+   
 
     fetch('/newsletter', {
       method: 'POST',
@@ -62,7 +60,7 @@
         'Content-Type': 'application/x-www-form-urlencoded',
 
       },
-      body: JSON.stringify(data),
+      body: `email=${email}`,
     }).then((response) => {
       if (response.ok) {
         return response.json();
