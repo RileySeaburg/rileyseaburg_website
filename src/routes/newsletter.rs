@@ -19,7 +19,9 @@ async fn newsletter_post(tmpl: web::Data<Tera>, form: web::Form<NewsletterForm>)
 
     // extract email from the form
     let email = &form.email.to_string();
+    print!("{}", email);
     let newSubscriber = Subscriber::new(email);
+    
 
     // insert the new subscriber into the database
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());

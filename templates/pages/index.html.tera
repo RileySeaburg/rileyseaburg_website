@@ -19,7 +19,7 @@
               href="https://github.com/rileyseaburg/rusty-road">RustyRoad</a> or any other new projects.
           </p>
           <div class='mt-10 sm:mt-12'>
-            <form action='/newsletter' class='sm:mx-auto sm:max-w-xl lg:mx-0'>
+            <form action='/newsletter' class='sm:mx-auto sm:max-w-xl lg:mx-0' method='POST'>
               <div class='sm:flex'>
                 <div class='min-w-0 flex-1'>
                   <label for='email' class='sr-only'>Email address</label>

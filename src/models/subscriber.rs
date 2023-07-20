@@ -16,6 +16,42 @@ impl Subscriber {
         }
     }
 
+    /// # Name: insert
+    /// ## Description
+    /// Inserts a new subscriber into the database.
+    /// ## Parameters
+    /// - `conn` - A mutable reference to a database connection.
+    /// ## Returns
+    /// - `Result<(), sqlx::Error>` - A result that returns nothing if successful, or an error if unsuccessful.
+    /// ## Example
+    /// ```rust
+    /// use rustyroad::database::Database;
+    /// use sqlx::PgPool;
+    /// use crate::models::Subscriber;
+    ///     
+    /// #[actix_web::main]
+    /// async fn main() {
+    ///    let database = Database::get_database_from_rustyroad_toml().unwrap();
+    ///   let database_url = format!(
+    ///       "postgres://{}:{}@{}:{}/{}",
+    ///      database.username,
+    ///     database.password,
+    ///    database.host,
+    ///   database.port,
+    /// database.name
+    /// );
+    /// let mut conn = PgPool::connect(&database_url)
+    ///    .await
+    ///  .expect("Failed to connect to Postgres.");
+    /// let new_subscriber = Subscriber::new("test@test");
+    /// let result = new_subscriber.insert(&mut conn).await;
+    /// assert!(result.is_ok());
+    /// }
+    /// ```
+    /// ## Panics
+    /// This function will panic if the database connection fails.
+    /// ## Errors
+    /// This function will return an error if the database connection fails.
     pub async fn insert(&self, conn: &mut Pool<Postgres>) -> Result<(), sqlx::Error> {
         let database: Database = Database::get_database_from_rustyroad_toml().expect("Couldn't parse the rustyroad.toml file. Please check the documentation for a proper implementation.");
         let sql = format!("INSERT INTO Subscriber (email) VALUES ('{}')", self.email);
