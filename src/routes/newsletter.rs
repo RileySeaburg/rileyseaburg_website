@@ -48,7 +48,8 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
 
     match result.await {
         Ok(_) => {
-            json_response.message = "You have successfully subscribed to the newsletter.".to_string()
+            json_response.message =
+                "You have successfully subscribed to the newsletter.".to_string()
         }
         Err(_) => {
             json_response.message = "There was an error subscribing to the newsletter.".to_string()
@@ -57,5 +58,7 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
 
     // create json response for the user
 
-    HttpResponse::Ok().json(json_response)
+    HttpResponse::Ok()
+        .content_type("application/json")
+        .json(json_response)
 }
