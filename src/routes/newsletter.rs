@@ -40,13 +40,12 @@ async fn newsletter_post(tmpl: web::Data<Tera>, form: web::Form<NewsletterForm>)
 
     let result = newSubscriber.insert(&mut conn);
 
-    match result {
+    match result.await {
         Ok(_) => {
-            context.insert("message", "Successfully subscribed!");
-        },
-        Err(e) => {
-            context.insert("message", "Failed to subscribe.");
-            println!("Failed to subscribe: {}", e);
+            context.insert("message", "You have successfully subscribed to the newsletter.");
+        }
+        Err(_) => {
+            context.insert("message", "There was an error subscribing to the newsletter.");
         }
     }
 
