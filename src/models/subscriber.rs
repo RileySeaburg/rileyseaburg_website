@@ -1,6 +1,6 @@
 use rustyroad::database::{Database, DatabaseConnection};
 use serde::{Deserialize, Serialize};
-use sqlx::{Pool, Postgres};
+use sqlx::{Executor, MySql, Pool, Postgres, Sqlite};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Subscriber {
