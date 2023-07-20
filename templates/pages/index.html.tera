@@ -65,6 +65,7 @@
     }).then((response) => {
       if (response.ok) {
         return response.json();
+
       } else {
         throw new Error('Something went wrong');
       }
@@ -72,7 +73,7 @@
       console.log(data);
       form.reset();
       // set success message and then remove it after 5 seconds
-      successMessage.innerHTML = '<div class="text-green-500">Success! You have been added to the mailing list.</div>';
+      successMessage.innerHTML = '<div class="text-green-500">{data}</div>';
       setTimeout(() => {
         successMessage.innerHTML = '';
       }, 5000);
