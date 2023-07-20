@@ -1,6 +1,4 @@
-
-    CREATE TABLE subscriber (
-    id Integer NOT NULL PRIMARY KEY UNIQUE
-,email Text NOT NULL UNIQUE
-
-    );
+CREATE TABLE subscriber (
+    id Integer SERIAL NOT NULL PRIMARY KEY UNIQUE,
+    email Text NOT NULL UNIQUE
+);
