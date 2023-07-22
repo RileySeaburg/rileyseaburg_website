@@ -14,7 +14,7 @@ pub struct Post {
 }
 
 impl Post {
-    pub async fn get_all_blogs() -> Result<Vec<Post>, sqlx::Error> {
+    pub async fn get_all_posts() -> Result<Vec<Post>, sqlx::Error> {
         let mut blogs: Vec<Post> = Vec::new();
         let mut blog: Post;
         let mut blog_row: (i32, String, String, String, bool, String, String);
