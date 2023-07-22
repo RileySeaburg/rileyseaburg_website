@@ -14,6 +14,27 @@ pub struct Post {
 }
 
 impl Post {
+    /// # Name: get_all_posts
+    /// 
+    /// # Arguments
+    /// - None
+    /// 
+    /// # Returns
+    /// - Result<Vec<Post>, sqlx::Error>
+    /// 
+    /// # Description
+    /// This function returns a vector of all the posts in the database.
+    /// 
+    /// # Example
+    /// ```
+    /// use rustyroad::models::post::Post;
+    /// 
+    /// #[actix_web::get("/posts")]
+    /// async fn get_all_posts() -> Result<Vec<Post>, sqlx::Error> {
+    ///    let posts = Post::get_all_posts().await?;
+    ///   Ok(posts)
+    /// }
+    /// ```
     pub async fn get_all_posts() -> Result<Vec<Post>, sqlx::Error> {
         let mut blogs: Vec<Post> = Vec::new();
         let mut blog: Post;
