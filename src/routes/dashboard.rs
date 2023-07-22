@@ -13,7 +13,9 @@ pub async fn dashboard_route(
         context.insert("username", &user.id().unwrap());
         context.insert("title", "Dashboard");
         context.insert("route_name", "dashboard");
-        let rendered = tmpl.render("layouts/authenticated.html.tera", &context).unwrap();
+        let rendered = tmpl
+            .render("layouts/authenticated/dashboard.html.tera", &context)
+            .unwrap();
         Ok(HttpResponse::Ok().body(rendered))
     } else {
         let mut context = Context::new();
