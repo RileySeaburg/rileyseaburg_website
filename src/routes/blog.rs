@@ -11,7 +11,7 @@ async fn blog(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Responder {
         let rendered = tmpl
             .render("layouts/authenticated/blog.html.tera", &context)
             .unwrap();
-        HttpResponse::Ok().body(rendered)
+        return HttpResponse::Ok().body(rendered);
     }
 
     let mut context = Context::new();
