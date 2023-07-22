@@ -1,7 +1,8 @@
 use actix_identity::Identity;
 use actix_web::{get, web, HttpResponse, Responder};
 use tera::{Context, Tera};
-use models::post::Post;
+use crate::models::Post;
+
 
 #[get("/blog")]
 async fn blog(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Responder {
