@@ -69,7 +69,8 @@ impl UserLogin {
                             Identity::login(&request.extensions(), self.username.clone()).unwrap();
 
                             ctx.insert("username", &self.username.clone());
-
+                            ctx.insert("route_name", "dashboard");
+                            ctx.insert("title", "Dashboard");
                             let body = tmpl.render("pages/dashboard.html.tera", &ctx).unwrap();
                             return Ok(HttpResponse::Ok()
                                 .append_header((actix_web::http::header::LOCATION, "/dashboard"))
