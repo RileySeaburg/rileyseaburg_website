@@ -1,20 +1,21 @@
-{% extends 'pages/dashboard.html.tera' %}
+{% extends 'layouts/layout.html.tera' %}
 {% block title %}{{title | default(value="Dashboard", boolean=true)}}{% endblock title %}
 
 
 
 {% block main_content %}
 
+
 {% block sidebar %}
 <!-- Sidebar content here -->
-
 {% endblock sidebar %}
 
-
-
-
-{% block authenticated_content %}
-
-<!-- Custom main content for this page -->
-{% endblock authenticated_content %}
+<main class="py-10 lg:pl-72">
+  <div class="px-4 sm:px-6 lg:px-8">
+    {% block authenticated_content %}
+    <!-- Custom main content for this page -->
+    {% endblock authenticated_content %}
+  </div>
+</main>
+</div>
 {% endblock main_content %}
