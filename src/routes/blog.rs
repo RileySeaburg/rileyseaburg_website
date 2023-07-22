@@ -12,17 +12,11 @@ async fn blog(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Responder {
             .render("layouts/authenticated/blog.html.tera", &context)
             .unwrap();
         HttpResponse::Ok().body(rendered)
-    } else {
-        let mut context = Context::new();
-        // let posts = crate::models::Post::get_all_posts().await.unwrap_or_else(|_| {
-        //     panic!(
-        //         "Failed to get all posts from the database in {}",
-        //         file!()
-        //     )
-        // });
-        context.insert("route_name", "blog");
-    //    context.insert("posts", &posts);
-        let rendered = tmpl.render("pages/blog.html.tera", &context).unwrap();
-        HttpResponse::Ok().body(rendered)
     }
+
+    let mut context = Context::new();
+    context.insert("route_name", "blog");
+    let rendered = tmpl.render("pages/blog.html.tera", &context).unwrap();
+    HttpResponse::Ok().body(rendered)
+
 }
