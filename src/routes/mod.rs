@@ -8,3 +8,7 @@ pub mod not_found;
 pub use not_found::*;
 pub mod newsletter;
 pub use newsletter::*;
+pub mod blog;
+pub use blog::*;
+pub mod post;
+pub use post::*;

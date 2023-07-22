@@ -14,11 +14,10 @@ async fn newsletter(tmpl: web::Data<Tera>) -> impl Responder {
 
 #[post("/newsletter")]
 async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
-   
     // extract email from the form
     let email = &form.email.to_string();
     print!("{}", email);
-    let newSubscriber = Subscriber::new(email);
+    let new_subscriber = Subscriber::new(email);
 
     // insert the new subscriber into the database
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());
@@ -33,7 +32,7 @@ async fn newsletter_post(form: web::Form<NewsletterForm>) -> impl Responder {
         .await
         .expect("Failed to connect to Postgres.");
 
-    let result = newSubscriber.insert(&mut conn);
+    let result = new_subscriber.insert(&mut conn);
 
     #[derive(serde::Serialize, serde::Deserialize)]
     struct JSONResoponse {

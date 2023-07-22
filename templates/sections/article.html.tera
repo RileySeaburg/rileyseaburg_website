@@ -1,0 +1,3 @@
+<article class="relative pt-10">
+  {{content}}
+</article>

@@ -10,3 +10,5 @@ static/styles.css
 .idea/vcs.xml
 .idea/rileyseaburg_website.iml
 .vscode/
+cert.pem
+key.pem

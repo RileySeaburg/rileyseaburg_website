@@ -1,6 +1,6 @@
 use rustyroad::database::{Database, DatabaseConnection};
 use serde::{Deserialize, Serialize};
-use sqlx::{Executor, MySql, Pool, Postgres, Sqlite};
+use sqlx::{Executor, Pool, Postgres};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Subscriber {
@@ -52,7 +52,7 @@ impl Subscriber {
     /// This function will panic if the database connection fails.
     /// ## Errors
     /// This function will return an error if the database connection fails.
-    pub async fn insert(&self, conn: &mut Pool<Postgres>) -> Result<(), sqlx::Error> {
+    pub async fn insert(&self, _conn: &mut Pool<Postgres>) -> Result<(), sqlx::Error> {
         let database: Database = Database::get_database_from_rustyroad_toml().expect("Couldn't parse the rustyroad.toml file. Please check the documentation for a proper implementation.");
         let sql = format!("INSERT INTO Subscriber (email) VALUES ('{}')", self.email);
         let connection = Database::create_database_connection(&database)
@@ -79,7 +79,6 @@ impl Subscriber {
                 println!("{:?} rows affected", rows_affected);
             }
         };
-
 
         Ok(())
     }
