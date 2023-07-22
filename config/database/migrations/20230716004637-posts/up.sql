@@ -1,5 +1,5 @@
 CREATE TABLE posts (
-    id Integer NOT NULL PRIMARY KEY,
+    id SERIAL NOT NULL PRIMARY KEY,
     Author VarChar(250) NULL,
     Title Text NULL,
     Content Text NULL,

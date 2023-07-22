@@ -121,8 +121,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::not_found::not_found)
             .service(routes::newsletter::newsletter)
             .service(routes::newsletter::newsletter_post)
-//            .service(routes::blog::blog)
-            .service(routes::blog::blog1)
+            .service(routes::blog::blog)
             .service(Files::new("/static", "./static")) // Add this line
     })
     .bind_openssl(uri, builder)?
