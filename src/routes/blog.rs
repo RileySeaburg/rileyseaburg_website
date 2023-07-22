@@ -14,7 +14,9 @@ async fn blog(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Responder {
         HttpResponse::Ok().body(rendered)
     } else {
         let mut context = Context::new();
+        let posts = crate::models::Post::get_all_posts();
         context.insert("route_name", "blog");
+        context.insert("posts", &posts);
         let rendered = tmpl.render("pages/blog.html.tera", &context).unwrap();
         HttpResponse::Ok().body(rendered)
     }
