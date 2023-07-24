@@ -9,7 +9,6 @@
     </head>
 
     <body id='app' class='h-full'>
-        <!-- if routename is dashboard don't render nav -->
         {% include 'components/navbar.html.tera'%}
         <div id='content'>{% block content %}{% endblock content %}</div>
         <div id='footer'>

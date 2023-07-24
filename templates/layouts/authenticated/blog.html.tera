@@ -1,7 +1,50 @@
 {% extends 'layouts/authenticated.html.tera' %}
-{% block title %}{{title | default(value="Dashboard", boolean=true)}}{% endblock title %}
+{% block title %}{{title | default(value="Blog", boolean=true)}}{% endblock title %}
 
 {% block authenticated_content %}
 {{ super() }}
 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-none mb-4">Content</h1>
+
+<!--List the current blogs-->
+<div class="border-b border-gray-200">
+    <div class="sm:flex sm:items-baseline">
+        <h3 class="text-base font-semibold leading-6 text-gray-900">Current Blogs</h3>
+        <div class="mt-4 sm:ml-10 sm:mt-0">
+            <nav class="-mb-px flex space-x-8">
+                <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+                <a href="#" class="border-indigo-500 text-indigo-600 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium" aria-current="page">Draft</a>
+                <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium">Published</a>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <ul class="space-y-4">
+        {% for post in posts %}
+        <li class="relative flex justify-between items-start gap-x-6 px-4 py-5 bg-white shadow-sm rounded-lg hover:shadow-md transition duration-200 ease-in-out border-l-4 border-indigo-500">
+            <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="{{post.image_url}}" alt="">
+            <a href="https://localhost:8080/posts/{{post.slug}}" class="flex justify-between w-full">
+                <div>
+                    <p class="text-sm font-semibold leading-6 text-gray-900">{{ post.title }}</p>
+                    <p class="mt-1 text-xs leading-5 text-gray-500">
+                        <time datetime="{{post.publish_date}}">{{post.publish_date | date(format="%B %e, %Y, %H:%M:%S") }}</time>
+                    </p>
+                </div>
+                <div class="flex items-center gap-x-4">
+                    <div class="hidden sm:flex sm:flex-col sm:items-end">
+                        <p class="text-sm leading-6 text-gray-900">Co-Founder / CEO</p>
+                        <p class="mt-1 text-xs leading-5 text-gray-500">Last updated    <time datetime="{{post.publish_date}}">{{post.updated_at | date(format="%B %e, %Y, %H:%M:%S") }}</time></p>
+                    </div>
+                    <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </a>
+            <div class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                <button class="bg-indigo-500 text-white rounded-lg px-2 py-1 text-sm hover:bg-indigo-600 transition duration-200 ease-in-out">Edit</button>
+            </div> </li>
+        {% endfor %}
+    </ul>
+</div>
+
 {% endblock authenticated_content %}

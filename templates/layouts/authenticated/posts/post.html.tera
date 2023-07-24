@@ -1,0 +1,38 @@
+{% extends 'layouts/authenticated.html.tera' %}
+{% block title %}{{title | default(value="Post {{post.id}}", boolean=true)}}{% endblock title %}
+
+{% block authenticated_content %}
+{{ super() }}
+
+<div class="flex flex-col">
+    <div class="flex flex-col md:flex-row md:justify-between">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-none mb-4">Post {{post.id}}</h1>
+        <div class="flex flex-row">
+            <a href="{{ edit_url }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+            <form action="{{ delete_url }}" method="post">
+                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+            </form>
+        </div>
+    </div>
+    <div class="flex flex-col md:flex-row md:justify-between">
+        <div class="flex flex-col">
+            <p class="text-gray-700 text-base mb-2">Title</p>
+            <p class="text-gray-900 text-2xl font-bold mb-2">{{post.title}}</p>
+        </div>
+        <div class="flex flex-col">
+            <p class="text-gray-700 text-base mb-2">Author</p>
+            <p class="text-gray-900 text-2xl font-bold mb-2">{{post.author}}</p>
+        </div>
+    </div>
+    <div class="flex flex-col md:flex-row md:justify-between">
+        <div class="flex flex-col">
+            <p class="text-gray-700 text-base mb-2">Content</p>
+            <p class="text-gray-900 text-2xl font-bold mb-2">{{post.content}}</p>
+        </div>
+        <div class="flex flex-col">
+            <p class="text-gray-700 text-base mb-2">Created At</p>
+            <p class="text-gray-900 text-2xl font-bold mb-2">{{post.created_at}}</p>
+        </div>
+    </div>
+</div>
+{% endblock authenticated_content %}

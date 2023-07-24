@@ -104,11 +104,11 @@ async fn main() -> std::io::Result<()> {
             .build();
 
         App::new()
-            // .wrap(
-            //     actix_web::middleware::Logger::default()
-            //         .exclude("/static")
-            //         .exclude("/favicon.ico"),
-            // )
+            .wrap(
+                actix_web::middleware::Logger::default()
+                    .exclude("/static")
+                    .exclude("/favicon.ico"),
+            )
             .wrap(IdentityMiddleware::default())
             .app_data(database.clone())
             .wrap(session_mw)
@@ -122,6 +122,10 @@ async fn main() -> std::io::Result<()> {
             .service(routes::newsletter::newsletter)
             .service(routes::newsletter::newsletter_post)
             .service(routes::blog::blog)
+            .service(routes::post::get_post)
+            .service(routes::post::update_post)
+            .service(routes::post::edit_post)
+            .service(routes::post::get_post_return_post_as_json)
             .service(Files::new("/static", "./static")) // Add this line
     })
     .bind_openssl(uri, builder)?
