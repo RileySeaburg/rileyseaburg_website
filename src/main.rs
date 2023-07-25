@@ -14,13 +14,32 @@ use openssl::{
 use std::env;
 use std::fs::File;
 use std::io::Read;
+use chrono::{NaiveDateTime, TimeZone, Utc};
+use tera::{Tera, Value, Result as TeraResult, to_value};
 
 use actix_identity::IdentityMiddleware;
 use rustyroad::database::Database;
-use tera::Tera;
 mod controllers;
 mod models;
 mod routes;
+
+use std::collections::HashMap;
+
+fn date_time_format(value: &Value, args: &HashMap<String, Value>) -> TeraResult<Value> {
+    let date = value.as_str().ok_or_else(|| tera::Error::msg("Invalid value format"))?;
+    let format_arg = args.get("format").ok_or_else(|| tera::Error::msg("Missing format argument"))?;
+    let format = format_arg
+        .as_str()
+        .ok_or_else(|| tera::Error::msg("Format argument is not a string"))?;
+
+    let date_time = Utc.datetime_from_str(date, "%Y-%m-%dT%H:%M:%S%.fZ")
+        .map_err(|_| tera::Error::msg("Error parsing date time"))?;
+    let formatted_date = date_time.format(format).to_string();
+
+    to_value(&formatted_date).map_err(|_| tera::Error::msg("Error converting formatted date to value"))
+}
+
+
 
 fn get_value_from_env_with_key(key: String) -> Result<String, Box<dyn std::error::Error>> {
     let key_value_from_env = env::var(key)?;
@@ -39,10 +58,8 @@ fn get_value_from_env_with_key(key: String) -> Result<String, Box<dyn std::error
 
 fn load_encrypted_private_key() -> PKey<Private> {
     let path_production: String = "/etc/letsencrypt/live/rileyseaburg.com/privkey.pem".to_string();
-
     let path_development: String = "key.pem".to_string();
 
-    // if the environment is production, use the production path
     let key: String = if env::var("ENV").unwrap().to_string().to_ascii_lowercase() == "production" {
         path_production.clone()
     } else {
@@ -58,7 +75,6 @@ fn load_encrypted_private_key() -> PKey<Private> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // Load environment variables from .env
     dotenv().ok();
 
     let enviornment = get_value_from_env_with_key("ENV".to_string()).unwrap();
@@ -88,8 +104,9 @@ async fn main() -> std::io::Result<()> {
     log::info!("starting HTTPS server at https://rileyseaburg.com/");
 
     HttpServer::new(move || {
-        // Load tera templates from the specified directory
-        let tera = Tera::new("templates/**/*").unwrap();
+        let mut tera = Tera::new("templates/**/*").unwrap();
+        tera.register_filter("date_time_format", date_time_format);
+
         println!("Initializing Actix web application...");
 
         let secret_key = Key::from(
@@ -99,7 +116,6 @@ async fn main() -> std::io::Result<()> {
         );
 
         let session_mw = SessionMiddleware::builder(CookieSessionStore::default(), secret_key)
-            // disable secure cookie for local testing
             .cookie_secure(false)
             .build();
 
@@ -112,7 +128,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(IdentityMiddleware::default())
             .app_data(database.clone())
             .wrap(session_mw)
-            .app_data(web::Data::new(tera.clone())) // Updated line
+            .app_data(web::Data::new(tera.clone()))
             .service(routes::index::index)
             .service(routes::dashboard::dashboard_route)
             .service(routes::login::login_route)
@@ -126,10 +142,12 @@ async fn main() -> std::io::Result<()> {
             .service(routes::post::update_post)
             .service(routes::post::edit_post)
             .service(routes::post::get_post_return_post_as_json)
-            .service(Files::new("/static", "/")) // Add this line
+            .service(routes::post::create_post)
+            .service(routes::post::new_post)
+            .service(Files::new("/", "./static"))
     })
-    .bind_openssl(uri, builder)?
-    .workers(2)
-    .run()
-    .await
+        .bind_openssl(uri, builder)?
+        .workers(2)
+        .run()
+        .await
 }
