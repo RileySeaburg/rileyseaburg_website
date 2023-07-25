@@ -82,7 +82,7 @@
 
     console.log(jsonPost);
 
-    fetch("https://localhost:8080/posts/{{post.slug}}/update", {
+    fetch("/posts/{{post.slug}}/update", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
