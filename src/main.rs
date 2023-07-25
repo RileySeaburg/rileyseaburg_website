@@ -6,6 +6,7 @@ use actix_web::{
     web::{self},
     App, HttpServer,
 };
+use chrono::{NaiveDateTime, TimeZone, Utc};
 use dotenv::dotenv;
 use openssl::{
     pkey::{PKey, Private},
@@ -14,8 +15,9 @@ use openssl::{
 use std::env;
 use std::fs::File;
 use std::io::Read;
-use chrono::{NaiveDateTime, TimeZone, Utc};
-use tera::{Tera, Value, Result as TeraResult, to_value};
+#[macro_use]
+extern crate tera;
+use tera::{to_value, Result as TeraResult, Tera, Value};
 
 use actix_identity::IdentityMiddleware;
 use rustyroad::database::Database;
@@ -25,21 +27,27 @@ mod routes;
 
 use std::collections::HashMap;
 
+use crate::routes::markdown_filter;
+
 fn date_time_format(value: &Value, args: &HashMap<String, Value>) -> TeraResult<Value> {
-    let date = value.as_str().ok_or_else(|| tera::Error::msg("Invalid value format"))?;
-    let format_arg = args.get("format").ok_or_else(|| tera::Error::msg("Missing format argument"))?;
+    let date = value
+        .as_str()
+        .ok_or_else(|| tera::Error::msg("Invalid value format"))?;
+    let format_arg = args
+        .get("format")
+        .ok_or_else(|| tera::Error::msg("Missing format argument"))?;
     let format = format_arg
         .as_str()
         .ok_or_else(|| tera::Error::msg("Format argument is not a string"))?;
 
-    let date_time = Utc.datetime_from_str(date, "%Y-%m-%dT%H:%M:%S%.fZ")
+    let date_time = Utc
+        .datetime_from_str(date, "%Y-%m-%dT%H:%M:%S%.fZ")
         .map_err(|_| tera::Error::msg("Error parsing date time"))?;
     let formatted_date = date_time.format(format).to_string();
 
-    to_value(&formatted_date).map_err(|_| tera::Error::msg("Error converting formatted date to value"))
+    to_value(&formatted_date)
+        .map_err(|_| tera::Error::msg("Error converting formatted date to value"))
 }
-
-
 
 fn get_value_from_env_with_key(key: String) -> Result<String, Box<dyn std::error::Error>> {
     let key_value_from_env = env::var(key)?;
@@ -106,7 +114,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let mut tera = Tera::new("templates/**/*").unwrap();
         tera.register_filter("date_time_format", date_time_format);
-
+        tera.register_filter("markdown", markdown_filter);
         println!("Initializing Actix web application...");
 
         let secret_key = Key::from(
@@ -146,8 +154,8 @@ async fn main() -> std::io::Result<()> {
             .service(routes::post::new_post)
             .service(Files::new("/", "./static"))
     })
-        .bind_openssl(uri, builder)?
-        .workers(2)
-        .run()
-        .await
+    .bind_openssl(uri, builder)?
+    .workers(2)
+    .run()
+    .await
 }

@@ -1,13 +1,23 @@
+use std::collections::HashMap;
+
 use actix_identity::Identity;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::Serialize;
-use tera::{Context, Tera};
+
+use tera::{Context, Tera, Result, Value, to_value};
 use crate::models::Post;
 extern crate markdown;
 use markdown::to_html;
 
+
+pub fn markdown_filter(value: Value, _: HashMap<String, Value>) -> Result<Value> {
+    let s = try_get_value!("markdown", "value", String, value);
+    Ok(to_value(to_html(s.as_str())).unwrap())
+}
+
 #[get("/post/{slug}")]
 async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path<String>) -> impl Responder {
+    
     let mut context = Context::new();
     let slug = slug.into_inner();
     let post = match Post::get_post_slug(slug.clone()).await {
