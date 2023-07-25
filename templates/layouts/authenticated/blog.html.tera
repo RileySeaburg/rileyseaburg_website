@@ -31,7 +31,7 @@
         <li
                 class="relative flex justify-between items-start gap-x-6 px-4 py-5 bg-white shadow-sm rounded-lg hover:shadow-md transition duration-200 ease-in-out border-l-4 border-indigo-500">
             <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="{{post.image_url}}" alt="">
-            <a href="/posts/{{post.slug}}" class="flex justify-between w-full">
+            <a href="/post/{{post.slug}}" class="flex justify-between w-full">
                 <div>
                     <p class="text-sm font-semibold leading-6 text-gray-900">{{ post.title }}</p>
                     <p class="mt-1 text-xs leading-5 text-gray-500">

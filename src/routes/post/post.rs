@@ -4,7 +4,7 @@ use serde::Serialize;
 use tera::{Context, Tera};
 use crate::models::Post;
 
-#[get("/posts/{slug}")]
+#[get("/post/{slug}")]
 async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path<String>) -> impl Responder {
     let mut context = Context::new();
     let slug = slug.into_inner();
