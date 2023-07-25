@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use actix_identity::Identity;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::Serialize;
-
+use sqlx::types::JsonValue;
 use tera::{Context, Tera, Result, Value, to_value};
 use crate::models::Post;
 extern crate markdown;
