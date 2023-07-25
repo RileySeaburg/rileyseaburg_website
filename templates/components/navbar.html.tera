@@ -10,7 +10,7 @@
                             alt=''>
                     </a>
                     <div class='-mr-2 flex items-center md:hidden'>
-                        <button type='button'
+                        <button id="open" type='button'
                             class='focus-ring-inset inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-white'
                             aria-expanded='false'>
                             <span class='sr-only'>Open main menu</span>
@@ -120,7 +120,7 @@
                 To: "opacity-0"
             -->
             <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
-                <button type="button" class="-m-2.5 p-2.5">
+                <button id="close" type="button" class="-m-2.5 p-2.5">
                     <span class="sr-only">Close sidebar</span>
                     <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" aria-hidden="true">
@@ -375,3 +375,19 @@
     </div>
 </div>
 {% endif %}
+
+
+<script>
+
+    let close = document.getElementById('close');
+
+    close.addEventListener('click', function () {
+        document.querySelector('.relative').classList.add('hidden');
+    });
+
+    let open = document.getElementById('open');
+
+    open.addEventListener('click', function () {
+        document.querySelector('.relative').classList.remove('hidden');
+    });
+</script>
