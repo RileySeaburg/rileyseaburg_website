@@ -8,37 +8,105 @@
     <div class="flex flex-row justify-between">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-none mb-4">Edit Post {{post.id}}</h1>
     </div>
-    <form >
+    <form>
         <div class="flex flex-col md:flex-row md:justify-between">
             <div class="flex flex-col">
                 <label for="title" class="text-gray-700 text-base mb-2">Title</label>
-                <input id="title" name="title" type="text" value="{{post.title}}" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                <input id="title" name="title" type="text" value="{{post.title}}"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col">
                 <label for="author" class="text-gray-700 text-base mb-2">Author</label>
-                <input id="author" name="author" type="text" value="{{post.author}}" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                <input id="author" name="author" type="text" value="{{post.author}}"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
         </div>
         <div class="flex flex-col mt-4">
             <label for="content" class="text-gray-700 text-base mb-2">Content</label>
-            <textarea id="content" name="content" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm h-64">{{post.content}}</textarea>
+            <textarea id="content" name="content"
+                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm h-64">{{post.content}}</textarea>
         </div>
         <div class="flex flex-col mt-4">
 
         </div>
     </form>
     <div class="flex flex-row mt-4">
-        <button id="updateButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
-        <a href="{{ delete_url }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete Post</a>
+        <button id="updateButton"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
+        <a href="{{ delete_url }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete
+            Post</a>
+        <div id="status-message" class="ml-4"></div>
     </div>
 </div>
-{% endblock authenticated_content %}
+
 <script>
+    var tags = [];
+    {% for tag in post.tags %}
+    tags.push('{{tag}}');
+    {% endfor %}
+
+
+
+    let title = document.querySelector('#title').value;
+    let author = document.querySelector('#author').value;
+    let textArea = document.querySelector('textarea');
+
+
+
+    document.querySelector('#updateButton').addEventListener('click', function () {
+        console.log("Content: " + content);
+
+        let statusMessageDiv = document.querySelector('#status-message');
+
+
+        let post = {
+            id: {{ post.id }},
+        author: author,
+        title: title,
+        content: textArea.value,
+        tags: tags,
+        publish_date: '{{post.publish_date}}',
+        status: '{{post.status}}',
+        image_url: '{{post.image_url}}',
+        category: '{{post.category}}',
+        created_at: '{{post.created_at}}',
+        updated_at: '{{post.updated_at}}',
+        slug: '{{post.slug}}'
+        };
 
 
 
 
-    document.querySelector('#updateButton').addEventListener('click',() => {
-        alert("you clicked");
+
+    const jsonPost = JSON.stringify(post);
+
+    console.log(jsonPost);
+
+    fetch("https://localhost:8080/posts/{{post.slug}}/update", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonPost
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            let message = data
+            statusMessageDiv.innerHTML = message;
+            statusMessageDiv.classList.add('text-green-500');
+            statusMessageDiv.classList.remove('text-red-500');
+        })
+        .catch((error) => {
+            var parsedError = JSON.parse(error);
+            console.error('Error:', parsedError.message);
+            statusMessageDiv.innerHTML = error;
+            statusMessageDiv.classList.add('text-red-500');
+            statusMessageDiv.classList.remove('text-green-500');
+        });
+
     });
 </script>
+
+
+{% endblock authenticated_content %}
