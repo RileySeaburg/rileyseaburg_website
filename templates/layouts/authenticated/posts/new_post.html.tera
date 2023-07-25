@@ -62,16 +62,20 @@
 </div>
 
 <script>
+    let tags = [];
+    let title = document.querySelector('#title');
+    let author = document.querySelector('#author');
+    let content_to_enter = document.querySelector('#content');
+    let status = document.querySelector('#status');
+    let image_url = document.querySelector('#image_url');
+    let category = document.querySelector('#category');
+    let slug = document.querySelector('#slug');
+    let tagsString = document.querySelector('#tags');
+
+
+
+
     document.querySelector('#createButton').addEventListener('click', function () {
-        let tags = [];
-        let title = document.querySelector('#title').value;
-        let author = document.querySelector('#author').value;
-        let content = document.querySelector('#content').value;
-        let status = document.querySelector('#status').value;
-        let image_url = document.querySelector('#image_url').value;
-        let category = document.querySelector('#category').value;
-        let slug = document.querySelector('#slug').value;
-        let tagsString = document.querySelector('#tags').value;
 
         if (tagsString.length > 0) {
             tags = tagsString.split(',');
@@ -85,17 +89,17 @@
         let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
 
         let post = {
-            author: author,
-            title: title,
-            content: content,
-            tags: tags,
+            author: author.value,
+            title: title.value,
+            content: content.value,
+            tags: tags.value,
             publish_date: formattedDate,
-            status: status,
-            image_url: image_url,
-            category: category,
+            status: status.value,
+            image_url: image_url.value,
+            category: category.value,
             created_at: formattedDate,
             updated_at: formattedDate,
-            slug: slug
+            slug: slug.value
         };
 
 
