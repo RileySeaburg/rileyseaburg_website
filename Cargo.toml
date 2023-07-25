@@ -28,6 +28,7 @@ pin-project-lite = "0.2.10"
 actix-identity = "0.5.2"
 openssl = "0.10.55"
 log = "0.4.19"
+markdown = "0.3.0"
 [dependencies.sqlx]
 features = ["postgres", "macros", "chrono", "json", "uuid", "offline"]
 version = "0.6.2"
