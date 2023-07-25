@@ -1,5 +1,6 @@
 use actix_identity::Identity;
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpResponse, Responder};
+use serde::Serialize;
 use tera::{Context, Tera};
 use crate::models::Post;
 
@@ -84,21 +85,79 @@ async fn get_post_return_post_as_json(slug: web::Path<String>) -> impl Responder
     }
 
 
-
-use actix_web::{post};
+#[derive(Serialize)]
+struct ResponseMessage {
+    status: String,
+    message: String,
+}
 
 #[post("/posts/{slug}/update")]
 async fn update_post(post: web::Json<Post>, slug: web::Path<String>) -> impl Responder {
     let slug = slug.into_inner();
-
+    println!("Updating post {}", slug);
+    println!("Post title: {:?}", post.title);
+    println!("Post body: {:?}", post.content);
+    println!("Post author: {:?}", post.author);
     // Update the post.
     let updated_post = Post::update_post_slug(slug.clone(), post.0.clone()).await;
 
-    // return JSON response with the sucess or failure of the update.
-    let message = match updated_post {
-        Ok(_post) => format!("Post {} updated successfully", slug),
-        Err(_e) => format!("Unable to update post {}", slug),
+    // Prepare a response message.
+    let response_message = match updated_post {
+        Ok(_post) => ResponseMessage {
+            status: "success".to_string(),
+            message: format!("Post {} updated successfully", slug),
+        },
+        Err(_e) => ResponseMessage {
+            status: "error".to_string(),
+            message: format!("Unable to update post {}", slug),
+        },
     };
 
-    HttpResponse::Ok().json(message)
+    // Return the response message as JSON.
+    HttpResponse::Ok().json(response_message)
+}
+
+
+#[post("/post/create")]
+async fn create_post(post: web::Json<Post>) -> impl Responder {
+    println!("Creating new post");
+    println!("Post title: {:?}", post.title);
+    println!("Post body: {:?}", post.content);
+    println!("Post author: {:?}", post.author);
+    // Create the post.
+    let created_post = Post::create_post(post.0.clone()).await;
+
+    // Prepare a response message.
+    let response_message = match created_post {
+        Ok(_post) => ResponseMessage {
+            status: "success".to_string(),
+            message: format!("Post {:?} created successfully", post.title),
+        },
+        Err(_e) => ResponseMessage {
+            status: "error".to_string(),
+            message: format!("Unable to create post {:?}", post.title),
+        },
+    };
+
+    // Return the response message as JSON.
+    HttpResponse::Ok().json(response_message)
+}
+
+#[get("/post/new")]
+async fn new_post(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Responder {
+    let mut context = Context::new();
+    if let Some(user) = user {
+        context.insert("username", &user.id().unwrap());
+        context.insert("title", "New Post");
+        context.insert("route_name", "new_post");
+        let rendered = tmpl.render("layouts/authenticated/posts/new_post.html.tera", &context).unwrap();
+        HttpResponse::Ok().body(rendered)
+    } else {
+        let title = format!("Not Logged in");
+        let message = format!("You must be logged in to create a new post");
+        context.insert("title", &title);
+        context.insert("message", &message);
+        let rendered = tmpl.render("pages/404.html.tera", &context).unwrap();
+        HttpResponse::Ok().body(rendered)
+    }
 }
