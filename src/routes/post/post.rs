@@ -28,11 +28,7 @@ async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path
 
     context.insert("post", &post);
 
-    // Convert the post body from Markdown to HTML.
-    let html: String = to_html(&post.content.unwrap_or("".to_string()));
 
-    // Insert the HTML into the context.
-    context.insert("html", &html);
 
     // Create URLs for the 'edit' and 'delete' actions.
     let edit_url = format!("/post/{}/edit", slug.clone());
