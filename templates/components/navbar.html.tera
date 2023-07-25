@@ -382,12 +382,12 @@
     let close = document.getElementById('close');
 
     close.addEventListener('click', function () {
-        document.querySelector('.relative').classList.add('hidden');
+        document.querySelector('.relative.z-50.lg:hidden').classList.add('hidden');
     });
 
     let open = document.getElementById('open');
 
     open.addEventListener('click', function () {
-        document.querySelector('.relative').classList.remove('hidden');
+        document.querySelector('.relative.z-50.lg:hidden').classList.remove('hidden');
     });
 </script>
