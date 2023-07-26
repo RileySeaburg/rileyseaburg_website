@@ -16,7 +16,7 @@ pub fn markdown_filter(value: &JsonValue, _: &HashMap<String, Value>) -> Result<
 }
 
 
-#[get("/post/{slug}")]
+#[get("/posts/{slug}")]
 async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path<String>) -> impl Responder {
     
     let mut context = Context::new();
