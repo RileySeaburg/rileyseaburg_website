@@ -41,9 +41,11 @@
 
 <script>
     var tags = [];
+    {% if post.tags %}
     {% for tag in post.tags %}
     tags.push('{{tag}}');
     {% endfor %}
+    {% endif %}
 
 
 
