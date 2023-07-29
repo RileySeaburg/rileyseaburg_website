@@ -6,55 +6,55 @@
 
 <div class="flex flex-col">
     <div class="flex flex-row justify-between">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-none mb-4">Create New Post</h1>
+        <h1 class="text-4xl text-5xl lg:text-6xl font-extrabold leading-none mb-4">Create New Post</h1>
     </div>
     <form>
         <div class="flex flex-col">
             <div class="flex flex-col">
                 <label for="title" class="text-gray-700 text-base mb-2">Title</label>
                 <input id="title" name="title" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
                 <label for="author" class="text-gray-700 text-base mb-2">Author</label>
                 <input id="author" name="author" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
                 <label for="status" class="text-gray-700 text-base mb-2">Status</label>
                 <input id="status" name="status" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
                 <label for="image_url" class="text-gray-700 text-base mb-2">Image URL</label>
                 <input id="image_url" name="image_url" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
                 <label for="category" class="text-gray-700 text-base mb-2">Category</label>
                 <input id="category" name="category" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
                 <label for="slug" class="text-gray-700 text-base mb-2">Slug</label>
                 <input id="slug" name="slug" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
                 <label for="content" class="text-gray-700 text-base mb-2">Content</label>
                 <textarea id="content" name="content"
-                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm h-64"></textarea>
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm h-64"></textarea>
             </div>
             <div class="flex flex-col mt-4">
                 <label for="tags" class="text-gray-700 text-base mb-2">Tags (comma-separated)</label>
                 <input id="tags" name="tags" type="text"
-                       class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
         </div>
     </form>
     <div class="flex flex-row mt-4">
         <button id="createButton"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
         <a href="/blog" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Discard
             Post</a>
         <div id="status-message" class="ml-4"></div>
@@ -126,10 +126,10 @@
                 statusMessageDiv.classList.add('text-red-500');
                 statusMessageDiv.classList.remove('text-green-500');
             }).then(() => {
-            setTimeout(() => {
-                window.location.href = '/blog';
-            }, 5000);
-        });
+                setTimeout(() => {
+                    window.location.href = '/blog';
+                }, 5000);
+            });
     });
 </script>
 

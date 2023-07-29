@@ -5,9 +5,9 @@
 {% endblock head %}
 {% block content %}
 <div class='relative px-6 lg:px-8'>
-<div class='mx-auto  max-w-2xl py-32 sm:py-48 lg:py-56' >
-<h1 class='text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-none mb-4'>{{post.title}}</h1>
-{{post.content | markdown | safe}}
-</div>
+  <div class='mx-auto  max-w-2xl py-32 py-48 lg:py-56'>
+    <h1 class='text-4xl text-5xl lg:text-6xl font-extrabold leading-none mb-4'>{{post.title}}</h1>
+    {{post.content | markdown | safe}}
+  </div>
 </div>
 {% endblock content %}
