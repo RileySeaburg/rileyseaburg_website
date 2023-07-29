@@ -56,10 +56,10 @@
                     class="bg-red-500 text-white rounded-lg px-2 py-1 text-sm hover:bg-blue-600 transition duration-200 ease-in-out">
                     Delete
                 </button>
-                <button id="edit" href="/post/{{post.slug}}/edit"
+                <a id="edit" href="/post/{{post.slug}}/edit"
                     class="bg-blue-500 text-white rounded-lg px-2 py-1 text-sm hover:bg-blue-600 transition duration-200 ease-in-out">
                     Edit
-                </button>
+                </a>
                 <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd"
                         d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
@@ -141,6 +141,7 @@
     let confirmDelete = deleteModal.querySelector('#confirm-delete');
     let cancelButton = deleteModal.querySelector('#cancel-delete');
 
+
     deleteButtons.forEach(deleteButton => {
         deleteButton.addEventListener('click', (e) => {
             e.preventDefault();
@@ -177,6 +178,9 @@
             };
         });
     });
+
+
+
 </script>
 
 <!-- ... Other HTML code ... -->
