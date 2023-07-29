@@ -65,7 +65,7 @@
     let tags = [];
     let title = document.querySelector('#title');
     let author = document.querySelector('#author');
-    let content_to_enter = document.querySelector('#content');
+    let text_area = document.querySelector('#content');
     let status = document.querySelector('#status');
     let image_url = document.querySelector('#image_url');
     let category = document.querySelector('#category');
@@ -73,25 +73,27 @@
     let tagsString = document.querySelector('#tags');
 
 
+    if (tagsString.length > 0) {
+        tags = tagsString.split(',');
+    }
 
+    let content = text_area.value;
+
+    let statusMessageDiv = document.querySelector('#status-message');
+
+    let date = new Date();
+    let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
+
+    text_area.addEventListener('change', (e) => {
+        content = e.target.value;
+    });
 
     document.querySelector('#createButton').addEventListener('click', function () {
-
-        if (tagsString.length > 0) {
-            tags = tagsString.split(',');
-        }
-
-
-
-        let statusMessageDiv = document.querySelector('#status-message');
-
-        let date = new Date();
-        let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
 
         let post = {
             author: author.value,
             title: title.value,
-            content: content.value,
+            content,
             tags: tags.value,
             publish_date: formattedDate,
             status: status.value,
@@ -101,7 +103,6 @@
             updated_at: formattedDate,
             slug: slug.value
         };
-
 
         const jsonPost = JSON.stringify(post);
 
@@ -126,7 +127,7 @@
                 statusMessageDiv.classList.remove('text-green-500');
             }).then(() => {
             setTimeout(() => {
-                statusMessageDiv.innerHTML = '';
+                window.location.href = '/blog';
             }, 5000);
         });
     });
