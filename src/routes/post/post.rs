@@ -1,24 +1,25 @@
 use std::collections::HashMap;
 
+use crate::models::Post;
 use actix_identity::Identity;
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, web, HttpResponse, Responder};
 use serde::Serialize;
 use sqlx::types::JsonValue;
-use tera::{Context, Tera, Result, Value, to_value};
-use crate::models::Post;
+use tera::{to_value, Context, Result, Tera, Value};
 extern crate markdown;
 use markdown::to_html;
-
 
 pub fn markdown_filter(value: &JsonValue, _: &HashMap<String, Value>) -> Result<Value> {
     let s = try_get_value!("markdown", "value", String, value);
     Ok(to_value(to_html(s.as_str())).unwrap())
 }
 
-
 #[get("/posts/{slug}")]
-async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path<String>) -> impl Responder {
-    
+async fn get_post(
+    user: Option<Identity>,
+    tmpl: web::Data<Tera>,
+    slug: web::Path<String>,
+) -> impl Responder {
     let mut context = Context::new();
     let slug = slug.into_inner();
     let post = match Post::get_post_slug(slug.clone()).await {
@@ -27,8 +28,6 @@ async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path
     };
 
     context.insert("post", &post);
-
-
 
     // Create URLs for the 'edit' and 'delete' actions.
     let edit_url = format!("/post/{}/edit", slug.clone());
@@ -40,7 +39,9 @@ async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path
         context.insert("username", &user.id().unwrap());
         context.insert("title", "Blog");
         context.insert("route_name", "blog");
-        let rendered = tmpl.render("layouts/authenticated/posts/post.html.tera", &context).unwrap();
+        let rendered = tmpl
+            .render("layouts/authenticated/posts/post.html.tera", &context)
+            .unwrap();
         HttpResponse::Ok().body(rendered)
     } else {
         context.insert("route_name", "blog");
@@ -49,9 +50,12 @@ async fn get_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path
     }
 }
 
-
 #[get("/post/{slug}/edit")]
-async fn edit_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Path<String>) -> impl Responder {
+async fn edit_post(
+    user: Option<Identity>,
+    tmpl: web::Data<Tera>,
+    slug: web::Path<String>,
+) -> impl Responder {
     let mut context = Context::new();
     let slug = slug.into_inner();
     let post = match Post::get_post_slug(slug.clone()).await {
@@ -61,32 +65,30 @@ async fn edit_post(user: Option<Identity>, tmpl: web::Data<Tera>, slug: web::Pat
 
     context.insert("post", &post);
 
- if let Some(user) = user {
-     // Create the URL for the 'update' action.
-     let update_url = format!("/posts/{}/update", slug);
-     let delete_url = format!("/posts/{}/delete", slug);
-     context.insert("update_url", &update_url);
-     context.insert("delete_url", &delete_url);
+    if let Some(user) = user {
+        // Create the URL for the 'update' action.
+        let update_url = format!("/posts/{}/update", slug);
+        let delete_url = format!("/posts/{}/delete", slug);
+        context.insert("update_url", &update_url);
+        context.insert("delete_url", &delete_url);
 
+        context.insert("username", &user.id().unwrap());
+        context.insert("title", "Edit Post");
+        context.insert("route_name", "edit_post");
+        let rendered = tmpl
+            .render("layouts/authenticated/posts/edit_post.html.tera", &context)
+            .unwrap();
 
-     context.insert("username", &user.id().unwrap());
-     context.insert("title", "Edit Post");
-     context.insert("route_name", "edit_post");
-     let rendered = tmpl.render("layouts/authenticated/posts/edit_post.html.tera", &context).unwrap();
-
-     HttpResponse::Ok().body(rendered)
+        HttpResponse::Ok().body(rendered)
     } else {
         let title = format!("Not Logged in");
-     let message = format!("You must be logged in to edit this post");
+        let message = format!("You must be logged in to edit this post");
         context.insert("title", &title);
         context.insert("message", &message);
         let rendered = tmpl.render("pages/404.html.tera", &context).unwrap();
         HttpResponse::Ok().body(rendered)
     }
 }
-
-
-
 
 #[get("/posts/{slug}/json")]
 async fn get_post_return_post_as_json(slug: web::Path<String>) -> impl Responder {
@@ -96,9 +98,8 @@ async fn get_post_return_post_as_json(slug: web::Path<String>) -> impl Responder
         Err(_e) => return HttpResponse::NotFound().body("Post not found"),
     };
 
-        HttpResponse::Ok().json(post)
-    }
-
+    HttpResponse::Ok().json(post)
+}
 
 #[derive(Serialize)]
 struct ResponseMessage {
@@ -132,7 +133,6 @@ async fn update_post(post: web::Json<Post>, slug: web::Path<String>) -> impl Res
     HttpResponse::Ok().json(response_message)
 }
 
-
 #[post("/post/create")]
 async fn create_post(post: web::Json<Post>) -> impl Responder {
     println!("Creating new post");
@@ -165,7 +165,9 @@ async fn new_post(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Respond
         context.insert("username", &user.id().unwrap());
         context.insert("title", "New Post");
         context.insert("route_name", "new_post");
-        let rendered = tmpl.render("layouts/authenticated/posts/new_post.html.tera", &context).unwrap();
+        let rendered = tmpl
+            .render("layouts/authenticated/posts/new_post.html.tera", &context)
+            .unwrap();
         HttpResponse::Ok().body(rendered)
     } else {
         let title = format!("Not Logged in");
@@ -175,4 +177,27 @@ async fn new_post(user: Option<Identity>, tmpl: web::Data<Tera>) -> impl Respond
         let rendered = tmpl.render("pages/404.html.tera", &context).unwrap();
         HttpResponse::Ok().body(rendered)
     }
+}
+
+#[delete("/post/{slug}/delete")]
+async fn delete_post(slug: web::Path<String>) -> impl Responder {
+    let slug = slug.into_inner();
+    println!("Deleting post {}", slug);
+    // Delete the post.
+    let deleted_post = Post::delete_post_slug(slug.clone()).await;
+
+    // Prepare a response message.
+    let response_message = match deleted_post {
+        true => ResponseMessage {
+            status: "success".to_string(),
+            message: format!("Post {} deleted successfully", slug),
+        },
+        false => ResponseMessage {
+            status: "error".to_string(),
+            message: format!("Unable to delete post {}", slug),
+        },
+    };
+
+    // Return the response message as JSON.
+    HttpResponse::Ok().json(response_message)
 }
