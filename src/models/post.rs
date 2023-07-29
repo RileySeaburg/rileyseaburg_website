@@ -135,6 +135,70 @@ impl Post {
     }
 
 
+    /// # Name: delete_post_by_slug
+    ///
+    /// # Arguments
+    /// - slug: String
+    ///
+    /// # Returns
+    /// - bool: true
+    ///
+    /// This function deletes a post from the database based on the slug.
+    ///
+    /// # Example
+    /// ```rust
+    /// use rustyroad::models::post::Post;
+    ///
+    /// #[actix_web::delete("/post/{slug}")]
+    /// async fn delete_post_by_slug(slug: web::Path<String>) -> Result<Post, sqlx::Error> {
+    ///   let post = Post::delete_post_by_slug(slug.into_inner()).await?;
+    ///  Ok(post)
+    ///
+    /// ```
+    pub async fn delete_post_slug(slug: String) -> bool {
+        let pool: sqlx::PgPool = get_db_pool().await.unwrap();
+        let result = sqlx::query("DELETE FROM Posts
+        WHERE slug = $1")
+            .bind(slug)
+            .execute(&pool)
+            .await;
+        match result {
+            Ok(_) => true,
+            Err(_) => false,
+        }
+    }
+
+    /// # Name: delete_post_by_id
+    ///
+    /// # Arguments
+    /// - id: i32
+    ///
+    /// # Returns
+    /// - bool: true
+    ///
+    /// This function deletes a post from the database based on the id.
+    ///
+    /// # Example
+    /// ```rust
+    /// use rustyroad::models::post::Post;
+    ///
+    /// #[actix_web::delete("/post/{id}")]
+    /// async fn delete_post_by_id(id: web::Path<i32>) -> Result<Post, sqlx::Error> {
+    ///  let post = Post::delete_post_by_id(id.into_inner()).await?;
+    /// Ok(post)
+    /// ```
+    pub async fn delete_post_id(id: i32) -> bool {
+        let pool: sqlx::PgPool = get_db_pool().await.unwrap();
+        let result = sqlx::query("DELETE FROM Posts
+        WHERE id = $1")
+            .bind(id)
+            .execute(&pool)
+            .await;
+        match result {
+            Ok(_) => true,
+            Err(_) => false,
+        }
+    }
 
 }
 
