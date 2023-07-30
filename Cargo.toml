@@ -29,6 +29,8 @@ actix-identity = "0.5.2"
 openssl = "0.10.55"
 log = "0.4.19"
 markdown = "0.3.0"
+strum = "0.25.0"
+strum_macros = "0.25.1"
 [dependencies.sqlx]
 features = ["postgres", "macros", "chrono", "json", "uuid", "offline"]
 version = "0.6.2"
