@@ -24,7 +24,7 @@
         <div class="flex flex-col mt-4">
             <label for="content" class="text-gray-700 text-base mb-2">Content</label>
             <textarea id="content" name="content" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm 
-                h-352 lg:h-64">{{post.content}}</textarea>
+                h-304 lg:h-64">{{post.content}}</textarea>
         </div>
         <div class="flex flex-col mt-4">
 
@@ -62,7 +62,8 @@
 
 
         let post = {
-            id: {{ post.id }},
+            id: {{ post.id }
+    },
         author: author,
         title: title,
         content: textArea.value,
