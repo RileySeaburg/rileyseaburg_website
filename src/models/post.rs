@@ -213,7 +213,7 @@ mod tests {
         let date_str = "2023-07-23 13:00:00";
         // Set up a test post
         let test_post = Post {
-            id: 1,
+            id: Some(1),
             author: Some(String::from("John Doe")),
             title: Some(String::from("My First Blog Post")),
             content: Some(String::from("This is the content of my first blog post")),
@@ -235,7 +235,7 @@ mod tests {
         assert!(!posts.is_empty(), "No posts were returned");
 
         // Find the post with id == 1
-        let post_opt = posts.into_iter().find(|p| p.id == 1);
+        let post_opt = posts.into_iter().find(|p| p.id == Some(1));
         assert!(post_opt.is_some(), "Post with id == 1 was not found");
 
         let post = post_opt.unwrap();
