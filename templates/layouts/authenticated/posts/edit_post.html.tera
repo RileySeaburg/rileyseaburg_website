@@ -33,8 +33,7 @@
     <div class="flex flex-row mt-4">
         <button id="updateButton"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-2xl lg:text-base">Update</button>
-        <a href="{{ delete_url }}"
-            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded  text-2xl lg:text-base">Delete
+        <a href="{{ delete_url }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded  text-2xl lg:text-base">Delete
             Post</a>
         <div id="status-message" class="ml-4"></div>
     </div>
@@ -63,8 +62,7 @@
 
 
         let post = {
-            id: {{ post.id }
-    },
+            id: {{ post.id }},
         author: author,
         title: title,
         content: textArea.value,
