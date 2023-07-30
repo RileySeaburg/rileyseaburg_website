@@ -155,6 +155,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::post::delete_post)
             .service(routes::pages::pages)
             .service(routes::pages::create)
+            .service(routes::pages::create_page)
             .service(Files::new("/", "./static"))
     })
     .bind_openssl(uri, builder)?
