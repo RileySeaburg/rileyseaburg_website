@@ -4,9 +4,123 @@
 {% block authenticated_content %}
 {{ super() }}
 <div class='relative px-6 lg:px-8'>
-<div class='mx-auto  max-w-2xl py-32 sm:py-48 lg:py-56' >
-<h1 class='text-4xl  lg:text-6xl font-extrabold leading-none mb-4'>
+  <div class='mx-auto  max-w-2xl py-32 sm:py-48 lg:py-56'>
+    <h1 class='text-4xl  lg:text-6xl font-extrabold leading-none mb-4'>
+      Create a new page
+    </h1>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Name
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Type
+            </th>
+          </tr>
+        </thead>
+        <tbody id="types_body" class="bg-white divide-y divide-gray-200">
 
+        </tbody>
+
+    <form action="/pages/create" method="POST" class="space-y-8 divide-y divide-gray-200">
+      <h2 class="text-xl font-medium text-gray-900">
+        Add your data types here
+      </h2>
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <p class="text-sm text-gray-500 sm:col-span-6">
+          For each component you want to add to your page, you need to add a data type. <br />For example, if you want
+          to add
+          a title and a description to your page, you need to add a data type for each of those. You can add as many
+          data types as you want.
+          After you add your data types, you can add your page.
+        </p>
+
+        <p class="text-sm text-gray-500 sm:col-span-6">
+          You cannot edit the page on this screen, after you add it, you will be forwarded to the edit page.
+        </p>
+
+
+
+        <div class="sm:col-span-6">
+          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+          <input type="text" name="name" id="name" autocomplete="given-name"
+            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+        </div>
+        <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+        <select name="type" id="type"
+          class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          {% for type in types %}
+          <option value="{{type}}">{{type}}</option>
+          {% endfor %}
+        </select>
+
+
+      </div>
+      <button type="submit"
+        class="mt-4 lg:mt-0 bg-blue-500 text-white rounded-lg px-2 py-1 text-base hover:bg-blue-600 transition duration-200 ease-in-out w-60">
+        Create
+      </button>
+
+    </form>
+    <button id="add"
+      class="mt-4 lg:mt-0 bg-blue-500 text-white rounded-lg px-2 py-1 text-base hover:bg-blue-600 transition duration-200 ease-in-out w-60">
+      Add Page
+    </button>
+  </div>
 </div>
-</div>
+
+
+
+<script>
+
+  let type_selector = document.getElementById('type');
+  let name_input = document.getElementById('name');
+  let types_holder = document.getElementById('types_body');
+  let name = name_input.value;
+
+  let form = document.querySelector('form');
+
+
+  type_selector.addEventListener('change', (e) => {
+    let type = e.target.value;
+  });
+
+  name_input.addEventListener('change', (e) => {
+    let name = e.target.value;
+  });
+
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let type = type_selector.value;
+    let name = name_input.value;
+    let data = {
+      type: type,
+      name: name
+    }
+
+    let html = `
+         <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              ${name}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              ${type}
+            </td>
+          </tr>
+    `;
+
+    types_holder.innerHTML += html;
+  });
+
+
+
+
+
+
+
+</script>
+
+
 {% endblock authenticated_content %}
