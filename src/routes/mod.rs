@@ -12,3 +12,5 @@ pub mod blog;
 pub use blog::*;
 pub mod post;
 pub use post::*;
+pub mod pages;
+pub use pages::*;
