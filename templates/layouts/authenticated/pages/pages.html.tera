@@ -9,7 +9,10 @@
       Pages index
     </h1>
 
-    
+    <a href="/pages/create"
+      class="mt-4 lg:mt-0 bg-blue-500 text-white rounded-lg px-2 py-1 text-base hover:bg-blue-600 transition duration-200 ease-in-out">
+      New Page
+    </a>
   </div>
 </div>
 {% endblock authenticated_content %}
