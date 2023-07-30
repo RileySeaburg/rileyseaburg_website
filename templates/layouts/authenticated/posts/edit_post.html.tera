@@ -62,8 +62,7 @@
 
 
         let post = {
-            id: {{ post.id }
-    },
+            id: {{ post.id }},
         author: author,
         title: title,
         content: textArea.value,
