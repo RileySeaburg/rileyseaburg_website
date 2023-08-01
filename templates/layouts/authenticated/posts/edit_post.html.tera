@@ -26,6 +26,12 @@
             <textarea id="content" name="content" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm 
                 h-304 lg:h-64">{{post.content}}</textarea>
         </div>
+
+        <div class="flex flex-col mt-4">
+            <label for="image_url" class="text-gray-700 text-base mb-2" >Image URL</label>
+            <input id="image_url" name="image_url" type="text" value="{{post.image_url}}"
+                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+        </div>
         <div class="flex flex-col mt-4">
 
         </div>
@@ -48,12 +54,18 @@
     {% endfor %}
     {% endif %}
 
-
+let url = "";
 
     let title = document.querySelector('#title').value;
     let author = document.querySelector('#author').value;
     let textArea = document.querySelector('textarea');
+    let url_input = document.querySelector('#image_url');
 
+    url_input.addEventListener('change', (e) => {
+        e.preventDefault();
+
+        url = url_input.value;
+    })
 
 
     document.querySelector('#updateButton').addEventListener('click', function () {
@@ -70,7 +82,7 @@
         tags: tags,
         publish_date: '{{post.publish_date}}',
         status: '{{post.status}}',
-        image_url: '{{post.image_url}}',
+        image_url: url,
         category: '{{post.category}}',
         created_at: '{{post.created_at}}',
         updated_at: '{{post.updated_at}}',
