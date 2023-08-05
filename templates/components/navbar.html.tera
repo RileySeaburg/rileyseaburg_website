@@ -1,7 +1,7 @@
 <header class='relative'>
     <div class='bg-gray-900 pt-6'>
         <nav class='relative mx-auto flex max-w-7xl items-center justify-between px-6 flex-1' aria-label='Global'>
-            <div class='flex items-center'>
+            <div class='flex items-center w-full'>
                 <div class='flex w-full items-center justify-between md:w-auto'>
                     <a href='/'>
                         <span class='sr-only'>Your Company</span>
@@ -12,7 +12,7 @@
                     {% if username %}
                     {% else %}
                     <div class='-mr-2 flex items-center md:hidden'>
-                        <button id="open" type='button'
+                        <button id="mobile-menu-button" type='button'
                             class='focus-ring-inset inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-white'
                             aria-expanded='false'>
                             <span class='sr-only'>Open main menu</span>
@@ -27,7 +27,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class='flex flex-1 justify-center gap-4'>
+            <div class='flex-1 justify-center gap-4 hidden md:flex'>
                 <a href="/dashboard" class=" text-base font-medium text-white hover:text-gray-300">
                     Dashboard
                 </a>
@@ -57,7 +57,7 @@
       -->{% if username %}
 
     {% else %}
-    <div class='absolute inset-x-0 top-0 origin-top transform p-2 transition md:hidden'>
+    <div class='absolute inset-x-0 top-0 origin-top transform p-2 transition hidden'>
         <div class='overflow-hidden rounded-lg bg-white shadow-md ring-1 ring-black ring-opacity-5'>
             <div class='flex items-center justify-between px-5 pt-4'>
                 <div>
@@ -79,8 +79,11 @@
             </div>
             <div class='pt-5 pb-6'>
                 <div class='mt-6 px-5'>
-                    <p class='text-center text-base font-medium text-gray-500'>Ready to start building? <a href='#'
-                            class='text-gray-900 hover:underline'>Login</a></p>
+                    <p class='text-center text-base font-medium text-gray-500'>Ready to start building?
+                        <a href='#' class='text-gray-900 hover:underline'>
+                            Login
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -104,7 +107,7 @@
         -->
     <div class="fixed inset-0 bg-gray-900/80 hidden" id="menu-backdrop"></div>
 
-    <div class="fixed inset-0 flex h-screen hidden" id="menu">
+    <div class="fixed inset-0 md:flex h-screen hidden" id="menu">
         <!--
             Off-canvas menu, show/hide based on off-canvas menu state.
     
@@ -423,35 +426,4 @@
         transform: translateX(0);
     }
 </style>
-
-<script>
-    const closeButton = document.getElementById('close-button');
-    const openButton = document.getElementById('menu-open');
-    const offCanvasMenu = document.getElementById('mobile-menu');
-    const menuBackdrop = document.getElementById('menu-backdrop');
-    const menu = document.getElementById('menu');
-
-    closeButton.addEventListener('click', () => {
-        offCanvasMenu.classList.remove('active');
-        menuBackdrop.classList.remove('active');
-        menu.classList.remove('active');
-        menuBackdrop.classList.add('hidden');
-        menu.classList.add('hidden');
-        offCanvasMenu.classList.add('hidden');
-        offCanvasMenu.classList.remove('h-screen');
-    });
-
-
-    openButton.addEventListener('click', () => {
-        offCanvasMenu.classList.remove('hidden')
-        menuBackdrop.classList.remove('hidden')
-        menu.classList.remove('hidden')
-        offCanvasMenu.classList.add('active');
-        menuBackdrop.classList.add('active');
-        menu.classList.add('active');
-        menuBackdrop.style.display = 'block';
-        menu.style.display = 'block';
-        offCanvasMenu.display = 'block';
-        offCanvasMenu.classList.add('h-screen');
-    });
-</script>
+<script src="/js/navbar.js"></script>
