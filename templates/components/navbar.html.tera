@@ -88,14 +88,8 @@
                     <div class="mt-6 flow-root w-full">
                         <div class="-my-6 divide-y divide-gray-500/10">
                             <div class="space-y-2 py-6">
-                                <a href="#"
-                                    class="ml-16 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Product</a>
-                                <a href="#"
-                                    class="ml-16 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Features</a>
-                                <a href="#"
-                                    class="ml-16 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Marketplace</a>
-                                <a href="#"
-                                    class="ml-16 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Company</a>
+                                <a href="/blog"
+                                    class="ml-16 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Blog</a>
                             </div>
                         </div>
                     </div>
