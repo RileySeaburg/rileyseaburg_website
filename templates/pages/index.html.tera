@@ -20,13 +20,13 @@
           </p>
           <div class='mt-10 mt-12'>
             <form action='/newsletter' class='mx-auto max-w-xl lg:mx-0' method='POST'>
-              <div class='flex'>
+              <div class='flex flex-row items-center gap-2'>
                 <div class='min-w-0 flex-1'>
                   <label for='email' class='sr-only'>Email address</label>
                   <input id='email' type='email' placeholder='Enter your email'
                     class='block w-full rounded-md border-0 px-4 py-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900'>
                 </div>
-                <div class='mt-3 mt-0 ml-3'>
+                <div class=''>
                   <button type='submit'
                     class='block w-full rounded-md bg-gradient-to-r from-teal-500 to-cyan-600 py-3 px-4 font-medium text-white shadow hover:from-teal-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900'>Sign
                     Up for mailing list.</button>
