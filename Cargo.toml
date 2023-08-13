@@ -32,6 +32,7 @@ markdown = "0.3.0"
 strum = "0.25.0"
 strum_macros = "0.25.1"
 llm = "0.1.1"
+rml_rtmp = "0.8.0"
 [dependencies.sqlx]
 features = ["postgres", "macros", "chrono", "json", "uuid", "offline"]
 version = "0.6.2"
