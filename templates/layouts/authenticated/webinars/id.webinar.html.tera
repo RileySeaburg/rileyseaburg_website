@@ -1,0 +1,15 @@
+{% extends 'layouts/authenticated.html.tera' %}
+{% block title %}{{title | default(value="Webinar Dashboard", boolean=true)}}{% endblock title %}
+
+{% block authenticated_content %}
+{{ super() }}
+
+<div class="flex flex-col">
+  <div class="flex flex-col  md:justify-between">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-none mb-4">Webinar {{id}}</h1>
+  </div>
+</div>
+
+{% include 'sections/webinar_studio.html.tera' %}
+
+{% endblock authenticated_content %}
