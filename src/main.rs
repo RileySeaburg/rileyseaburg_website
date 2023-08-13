@@ -156,6 +156,9 @@ async fn main() -> std::io::Result<()> {
             .service(routes::pages::pages)
             .service(routes::pages::create)
             .service(routes::pages::create_page)
+            .service(routes::webinar::webinar)
+            .service(routes::webinar::get_webinar_by_id)
+            .service(routes::webinar::webinar_live)
             .service(Files::new("/", "./static"))
     })
     .bind_openssl(uri, builder)?
