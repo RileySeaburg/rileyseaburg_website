@@ -1,9 +1,8 @@
 <header class='relative'>
     <div class='bg-gray-900 pt-6'>
-        <nav class='relative mx-auto flex max-w-7xl items-center justify-between px-6 flex-1'
-            aria-label='Global'>
-            <div class='flex items-center w-full'>
-                <div class='flex w-full items-center justify-between md:w-auto'>
+        <nav class='relative mx-auto flex max-w-7xl items-center justify-between px-6 flex-1' aria-label='Global'>
+            <div class='flex items-center'>
+                <div class='flex items-center justify-between md:w-auto'>
                     {% if username %}
                     {% else %}
                     <a href='/'>
@@ -29,21 +28,23 @@
                 </div>
             </div>
             <div class='flex flex-row gap-2 justify-center'>
-                <div class='flex-1 justify-center gap-4 hidden md:flex'>
-                    <a href="/dashboard" class=" text-base font-medium text-white hover:text-gray-300">
-                        Dashboard
-                    </a>
-                    <a href="/blog" class="text-base font-medium text-white hover:text-gray-300">
-                        Blog
-                    </a>
-                </div>
-                <div class='hidden md:flex md:items-center md:space-x-6'>
-                    {% if username %}
-                    <a href="/logout" class="text-base font-medium text-white hover:text-gray-300">Logout</a>
-                    {% else %}
-                    <a href="/login" class="text-base font-medium text-white hover:text-gray-300">Log in</a>
-                    {% endif %}
-                </div>
+
+                <a href="/dashboard" class=" text-base font-medium text-white hover:text-gray-300">
+                    Dashboard
+                </a>
+                <a href="/blog" class="text-base font-medium text-white hover:text-gray-300">
+                    Blog
+                </a>
+
+
+
+            </div>
+            <div>
+                {% if username %}
+                <a href="/logout" class="text-base font-medium text-white hover:text-gray-300">Logout</a>
+                {% else %}
+                <a href="/login" class="text-base font-medium text-white hover:text-gray-300 ">Log In</a>
+                {% endif %}
             </div>
         </nav>
     </div>
@@ -338,7 +339,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#"
+                            <a href="/webinar"
                                 class="text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-base leading-6 font-semibold">
                                 <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="currentColor" aria-hidden="true">
