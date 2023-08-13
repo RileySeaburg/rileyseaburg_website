@@ -1,0 +1,22 @@
+<!-- Chatbox Container -->
+<div class="w-96 h-96 bg-gray-800 p-4 rounded-xl shadow-lg">
+
+  <!-- Chat Messages -->
+  <div class="bg-white h-80 overflow-y-scroll rounded p-4 mb-4">
+    <!-- Sample Message (repeat as needed) -->
+    <div class="mb-2">
+      <p class="text-sm text-gray-600">Username</p>
+      <p class="text-gray-900">Hey, this is a sample message!</p>
+    </div>
+    <!-- ... other messages ... -->
+  </div>
+
+  <!-- Message Input -->
+  <div class="flex">
+    <input type="text" placeholder="Type a message..." class="flex-grow p-2 rounded-l text-gray-900">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-r">
+      Send
+    </button>
+  </div>
+
+</div>
