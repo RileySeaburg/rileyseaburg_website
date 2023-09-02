@@ -27,7 +27,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class='flex flex-row gap-2 justify-center'>
+            <div class='flex flex-row gap-2 justify-between'>
 
                 <a href="/dashboard" class=" text-base font-medium text-white hover:text-gray-300">
                     Dashboard
