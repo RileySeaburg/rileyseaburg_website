@@ -47,7 +47,7 @@ fn media_codecs() -> Vec<RtpCodecCapability> {
 struct TransportOptions {
     id: TransportId,
     dtls_parameters: DtlsParameters,
-    ice_candidates: Vec<IceCandidate>,
+    ice_candidates: Vec<IceCandidate >,
     ice_parameters: IceParameters,
 }
 
