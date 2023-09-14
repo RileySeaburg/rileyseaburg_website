@@ -123,30 +123,30 @@
 
         console.log(jsonPost);
 
-        // fetch("/post/create", {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: jsonPost
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log('Success:', data);
-        //         statusMessageDiv.innerHTML = 'Post created successfully!';
-        //         statusMessageDiv.classList.add('text-green-500');
-        //         statusMessageDiv.classList.remove('text-red-500');
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //         statusMessageDiv.innerHTML = 'Error creating post!';
-        //         statusMessageDiv.classList.add('text-red-500');
-        //         statusMessageDiv.classList.remove('text-green-500');
-        //     }).then(() => {
-        //         setTimeout(() => {
-        //             window.location.href = '/blog';
-        //         }, 5000);
-        //     });
+        fetch("/post/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonPost
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                statusMessageDiv.innerHTML = 'Post created successfully!';
+                statusMessageDiv.classList.add('text-green-500');
+                statusMessageDiv.classList.remove('text-red-500');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                statusMessageDiv.innerHTML = 'Error creating post!';
+                statusMessageDiv.classList.add('text-red-500');
+                statusMessageDiv.classList.remove('text-green-500');
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = '/blog';
+                }, 5000);
+            });
     });
 </script>
 
