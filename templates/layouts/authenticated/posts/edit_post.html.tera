@@ -76,17 +76,17 @@ let url = "";
 
         let post = {
             id: {{ post.id }},
-        author: author,
-        title: title,
-        content: textArea.value,
-        tags: tags,
-        publish_date: '{{post.publish_date}}',
-        status: '{{post.status}}',
-        image_url: url,
-        category: '{{post.category}}',
-        created_at: '{{post.created_at}}',
-        updated_at: '{{post.updated_at}}',
-        slug: '{{post.slug}}'
+            author: author,
+            title: title,
+            content: textArea.value,
+            tags: tags,
+            publish_date: '{{post.publish_date}}',
+            status: '{{post.status}}',
+            image_url: url,
+            category: '{{post.category}}',
+            created_at: '{{post.created_at}}',
+            updated_at: '{{post.updated_at}}',
+            slug: '{{post.slug}}'
         };
 
 
