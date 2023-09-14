@@ -63,73 +63,90 @@
 
 <script>
     let tags = [];
-    let title = document.querySelector('#title');
-    let author = document.querySelector('#author');
-    let text_area = document.querySelector('#content');
-    let status = document.querySelector('#status');
-    let image_url = document.querySelector('#image_url');
-    let category = document.querySelector('#category');
-    let slug = document.querySelector('#slug');
-    let tagsString = document.querySelector('#tags');
-
-
-    if (tagsString.length > 0) {
-        tags = tagsString.split(',');
-    }
-
-    let content = text_area.value;
+    let title = document.querySelector('#title').addEventListener('change', (e) => {
+        e.preventDefault();
+        title = e.target.value;
+       
+    });
+    let author = document.querySelector('#author').addEventListener('change', (e) => {
+        e.preventDefault();
+        author = e.target.value;
+    });
+    let content = document.querySelector('#content').addEventListener('change', (e) => {
+        e.preventDefault();
+        content = e.target.value;
+      
+    });
+    let status = document.querySelector('#status').addEventListener('change', (e) => {
+        e.preventDefault();
+        status = e.target.value;
+    });
+    let image_url = document.querySelector('#image_url').addEventListener('change', (e) => {
+        e.preventDefault();
+        image_url = e.target.value;
+    });
+    let category = document.querySelector('#category').addEventListener('change', (e) => {
+        e.preventDefault();
+        category = e.target.value;
+    });
+    let slug= document.querySelector('#slug').addEventListener('change', (e) => {
+        e.preventDefault();
+        slug = e.target.value;
+    });
+    let tagsString = document.querySelector('#tags').addEventListener('change', (e) => {
+        e.preventDefault();
+        tags = e.target.value.split(',');
+    });
 
     let statusMessageDiv = document.querySelector('#status-message');
 
     let date = new Date();
     let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
 
-    text_area.addEventListener('change', (e) => {
-        content = e.target.value;
-    });
-
     document.querySelector('#createButton').addEventListener('click', function () {
 
         let post = {
-            author: author.value,
-            title: title.value,
+            author: author,
+            title: title,
             content: content,
-            tags: tags.value,
+            tags: tags,
             publish_date: formattedDate,
-            status: status.value,
-            image_url: image_url.value,
-            category: category.value,
+            status: status,
+            image_url: image_url,
+            category: category,
             created_at: formattedDate,
             updated_at: formattedDate,
-            slug: slug.value
+            slug: slug
         };
 
         const jsonPost = JSON.stringify(post);
 
-        fetch("/post/create", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: jsonPost
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                statusMessageDiv.innerHTML = 'Post created successfully!';
-                statusMessageDiv.classList.add('text-green-500');
-                statusMessageDiv.classList.remove('text-red-500');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                statusMessageDiv.innerHTML = 'Error creating post!';
-                statusMessageDiv.classList.add('text-red-500');
-                statusMessageDiv.classList.remove('text-green-500');
-            }).then(() => {
-                setTimeout(() => {
-                    window.location.href = '/blog';
-                }, 5000);
-            });
+        console.log(jsonPost);
+
+        // fetch("/post/create", {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: jsonPost
+        // })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         console.log('Success:', data);
+        //         statusMessageDiv.innerHTML = 'Post created successfully!';
+        //         statusMessageDiv.classList.add('text-green-500');
+        //         statusMessageDiv.classList.remove('text-red-500');
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //         statusMessageDiv.innerHTML = 'Error creating post!';
+        //         statusMessageDiv.classList.add('text-red-500');
+        //         statusMessageDiv.classList.remove('text-green-500');
+        //     }).then(() => {
+        //         setTimeout(() => {
+        //             window.location.href = '/blog';
+        //         }, 5000);
+        //     });
     });
 </script>
 
