@@ -56,17 +56,22 @@
 
 let url = "";
 
-    let title = document.querySelector('#title').value;
-    let author = document.querySelector('#author').value;
-    let textArea = document.querySelector('textarea');
-    let url_input = document.querySelector('#image_url');
-
-    url_input.addEventListener('change', (e) => {
+    let title = document.querySelector('#title').addEventListener('change', (e) => {
         e.preventDefault();
-
+        title = document.querySelector('#title').value;
+    });
+    let author = document.querySelector('#author').addEventListener('change', (e) => {
+        e.preventDefault();
+        author = document.querySelector('#author').value;
+    });
+    let textArea = document.querySelector('textarea').addEventListener('change', (e) => {
+        e.preventDefault();
+        content = document.querySelector('textarea').value;
+    });
+    let url_input = document.querySelector('#image_url').addEventListener('change', (e) => {
+        e.preventDefault();
         url = url_input.value;
     })
-
 
     document.querySelector('#updateButton').addEventListener('click', function () {
         console.log("Content: " + content);
@@ -78,7 +83,7 @@ let url = "";
             id: {{ post.id }},
             author: author,
             title: title,
-            content: textArea.value,
+            content: textArea,
             tags: tags,
             publish_date: '{{post.publish_date}}',
             status: '{{post.status}}',
