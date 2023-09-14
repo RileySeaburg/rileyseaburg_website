@@ -92,18 +92,11 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     let uri = if enviornment == "production" {
-        "0.0.0.0:443"
+        "0.0.0.0:80"
     } else {
         "localhost:8080"
     };
 
-    if enviornment == "production" {
-        builder
-            .set_certificate_chain_file("/etc/letsencrypt/live/rileyseaburg.com/fullchain.pem")
-            .unwrap();
-    } else {
-        builder.set_certificate_chain_file("cert.pem").unwrap();
-    }
     dotenv::dotenv().ok();
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("debug")).init();
 
@@ -158,7 +151,8 @@ async fn main() -> std::io::Result<()> {
             .service(routes::pages::create_page)
             .service(Files::new("/", "./static"))
     })
-    .bind_openssl(uri, builder)?
+    .bind(uri)
+    .expect("yo")
     .workers(2)
     .run()
     .await
