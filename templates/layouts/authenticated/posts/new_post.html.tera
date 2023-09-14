@@ -93,7 +93,7 @@
         let post = {
             author: author.value,
             title: title.value,
-            content,
+            content: content,
             tags: tags.value,
             publish_date: formattedDate,
             status: status.value,
