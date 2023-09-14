@@ -33,7 +33,6 @@ strum = "0.25.0"
 strum_macros = "0.25.1"
 llm = "0.1.1"
 rml_rtmp = "0.8.0"
-mediasoup = "0.11.4"
 uuid = {version = "1.4.1", features = ["v4"]}
 [dependencies.sqlx]
 features = ["postgres", "macros", "chrono", "json", "uuid", "offline"]
