@@ -114,8 +114,9 @@ impl Post {
     pub async fn create_post(new_post: Post) -> Result<Post, sqlx::Error> {
         let pool: sqlx::PgPool = get_db_pool().await.unwrap();
         let post: Post = sqlx::query_as("
-        INSERT INTO Posts (author, title, content, tags, publish_date, status, image_url, category, created_at, updated_at, slug)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        INSERT INTO Posts 
+        SET author = $1, title = $2, content = $3, tags = $4, publish_date = $5,
+            status = $6, image_url = $7, category = $8, created_at = $9, updated_at = $10, slug = $11
         RETURNING *
     ")
             .bind(new_post.author)
