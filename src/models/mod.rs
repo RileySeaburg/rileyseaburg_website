@@ -1,7 +1,7 @@
-pub mod user;
 pub mod subscriber;
-pub use user::*;
+pub mod user;
 pub use subscriber::*;
+pub use user::*;
 pub mod post;
 pub use post::*;
 pub mod page;

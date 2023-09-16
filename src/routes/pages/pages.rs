@@ -53,7 +53,7 @@ async fn create_page(page: web::Json<Page>) -> impl Responder {
 
     // Create a dummy instance of the Page struct
     Page::create_page(page.clone()).unwrap();
-    
+
     for field in PageField::iter() {
         println!("Page field: {:?}", field);
         println!("Page field value: {:?}", page.get_field(&field));

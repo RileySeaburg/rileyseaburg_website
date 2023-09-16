@@ -1,26 +1,27 @@
-use rustyroad::database::Database;
 use crate::models::Post;
+use rustyroad::database::Database;
 
 pub async fn get_db_pool() -> Result<sqlx::PgPool, sqlx::Error> {
-        let database = Database::get_database_from_rustyroad_toml().unwrap();
+    let database = Database::get_database_from_rustyroad_toml().unwrap();
 
-        let database_url = format!(
-            "postgres://{}:{}@{}:{}/{}",
-            database.username, database.password, database.host, database.port, database.name
-        );
+    let database_url = format!(
+        "postgres://{}:{}@{}:{}/{}",
+        database.username, database.password, database.host, database.port, database.name
+    );
 
-        let db_pool = sqlx::PgPool::connect(&database_url).await?;
-        Ok(db_pool)
-    }
+    let db_pool = sqlx::PgPool::connect(&database_url).await?;
+    Ok(db_pool)
+}
 
-    pub async fn execute_query(pool: &sqlx::PgPool) -> Result<Vec<(i32, String, String, String, bool, String, String)>, sqlx::Error> {
-        let rows_returned: Vec<(i32, String, String, String, bool, String, String)> =
-            sqlx::query_as("SELECT * FROM Posts")
-                .fetch_all(pool)
-                .await?;
-        Ok(rows_returned)
-    }
-
+pub async fn execute_query(
+    pool: &sqlx::PgPool,
+) -> Result<Vec<(i32, String, String, String, bool, String, String)>, sqlx::Error> {
+    let rows_returned: Vec<(i32, String, String, String, bool, String, String)> =
+        sqlx::query_as("SELECT * FROM Posts")
+            .fetch_all(pool)
+            .await?;
+    Ok(rows_returned)
+}
 
 #[cfg(test)]
 mod tests {
@@ -45,5 +46,4 @@ mod tests {
         // let known_row_data = (id, title, body, author, published, created_at, updated_at);
         // assert_eq!(rows[0], known_row_data);
     }
-
 }

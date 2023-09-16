@@ -65,4 +65,3 @@ async fn webinar_live(tmpl: web::Data<Tera>) -> impl Responder {
         .unwrap();
     HttpResponse::Ok().body(rendered)
 }
-

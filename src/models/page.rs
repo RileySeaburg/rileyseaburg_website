@@ -74,9 +74,6 @@ impl Page {
     }
 
     pub fn create_page(page: Page) -> Result<Page, sqlx::Error> {
-      
-
-
         Ok(page)
     }
 }
