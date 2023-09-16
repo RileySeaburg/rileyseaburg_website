@@ -1,8 +1,9 @@
+use crate::controllers::{execute_query, get_db_pool};
 use chrono::NaiveDateTime;
 use rustyroad::database::Database;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
-use crate::controllers::{execute_query, get_db_pool};
+use std::io::Write;
 
 use crate::controllers::datetime::{self, datetime as local_datetime};
 
@@ -13,36 +14,34 @@ pub struct Post {
     pub title: Option<String>,
     pub content: Option<String>,
     pub tags: Option<Vec<String>>,
-    #[serde(with = "local_datetime")]  // use the custom serializer/deserializer
+    #[serde(with = "local_datetime")] // use the custom serializer/deserializer
     pub publish_date: Option<NaiveDateTime>,
     pub status: Option<String>,
     pub image_url: Option<String>,
     pub category: Option<String>,
-    #[serde(with = "local_datetime")]  // use the custom serializer/deserializer
+    #[serde(with = "local_datetime")] // use the custom serializer/deserializer
     pub created_at: Option<NaiveDateTime>,
-    #[serde(with = "local_datetime")]  // use the custom serializer/deserializer
+    #[serde(with = "local_datetime")] // use the custom serializer/deserializer
     pub updated_at: Option<NaiveDateTime>,
     pub slug: Option<String>,
 }
 
-
-
 impl Post {
     /// # Name: get_all_posts
-    /// 
+    ///
     /// # Arguments
     /// - None
-    /// 
+    ///
     /// # Returns
     ///
-    /// 
+    ///
     ///
     /// This function returns a vector of all the posts in the database.
-    /// 
+    ///
     /// # Example
     /// ```rust
     /// use rustyroad::models::post::Post;
-    /// 
+    ///
     /// #[actix_web::get("/posts")]
     /// async fn get_all_posts() -> Result<Vec<Post>, sqlx::Error> {
     ///    let posts = Post::get_all_posts().await?;
@@ -85,43 +84,56 @@ impl Post {
         Ok(post)
     }
 
-
     pub async fn update_post_slug(slug: String, updated_post: Post) -> Result<Post, sqlx::Error> {
         let pool: sqlx::PgPool = get_db_pool().await.unwrap();
-        let post: Post = sqlx::query_as("
+        let post: Post = sqlx::query_as(
+            "
         UPDATE Posts
         SET author = $1, title = $2, content = $3, tags = $4, publish_date = $5,
             status = $6, image_url = $7, category = $8, updated_at = $9
         WHERE slug = $10
         RETURNING *
-    ")
-            .bind(updated_post.author)
-            .bind(updated_post.title)
-            .bind(updated_post.content)
-            .bind(updated_post.tags)
-            .bind(updated_post.publish_date)
-            .bind(updated_post.status)
-            .bind(updated_post.image_url)
-            .bind(updated_post.category)
-            .bind(chrono::Utc::now().naive_utc())
-            .bind(slug)
-            .fetch_one(&pool)
-            .await?;
+    ",
+        )
+        .bind(updated_post.author)
+        .bind(updated_post.title)
+        .bind(updated_post.content)
+        .bind(updated_post.tags)
+        .bind(updated_post.publish_date)
+        .bind(updated_post.status)
+        .bind(updated_post.image_url)
+        .bind(updated_post.category)
+        .bind(chrono::Utc::now().naive_utc())
+        .bind(slug)
+        .fetch_one(&pool)
+        .await?;
         Ok(post)
     }
 
-
-    pub async fn create_post(new_post: Post) -> Result<Post, sqlx::Error> {
+    pub async fn create_post(new_post: Post) -> Result<(), sqlx::Error> {
         let pool: sqlx::PgPool = get_db_pool().await.unwrap();
-        let post: Post = sqlx::query_as("
-        INSERT INTO Posts (author, title, content, tags, publish_date, status, image_url, category, created_at, updated_at, slug)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-        RETURNING *
-    ")
+        write!(std::io::stdout(), "new_post: {:?}", new_post).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.title).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.content).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.author).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.tags).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.publish_date).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.status).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.image_url).unwrap();
+        writeln!(std::io::stdout(), "new_post: {:?}", new_post.category).unwrap();
+
+        let tags_array = new_post.tags.unwrap_or_else(Vec::new);
+
+
+
+        let result  = sqlx::query("
+                INSERT INTO Posts (author, title, content, tags, publish_date, status, image_url, category, created_at, updated_at, slug)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            ")
             .bind(new_post.author)
             .bind(new_post.title)
             .bind(new_post.content)
-            .bind(new_post.tags)
+            .bind(&tags_array)
             .bind(new_post.publish_date)
             .bind(new_post.status)
             .bind(new_post.image_url)
@@ -129,11 +141,14 @@ impl Post {
             .bind(new_post.created_at)
             .bind(chrono::Utc::now().naive_utc())
             .bind(new_post.slug)
-            .fetch_one(&pool)
-            .await?;
-        Ok(post)
-    }
+            .execute(&pool)
+            .await;
 
+        match result {
+            Ok(_) => Ok(()),
+            Err(e) => Err(e),
+        }
+    }
 
     /// # Name: delete_post_by_slug
     ///
@@ -157,11 +172,13 @@ impl Post {
     /// ```
     pub async fn delete_post_slug(slug: String) -> bool {
         let pool: sqlx::PgPool = get_db_pool().await.unwrap();
-        let result = sqlx::query("DELETE FROM Posts
-        WHERE slug = $1")
-            .bind(slug)
-            .execute(&pool)
-            .await;
+        let result = sqlx::query(
+            "DELETE FROM Posts
+        WHERE slug = $1",
+        )
+        .bind(slug)
+        .execute(&pool)
+        .await;
         match result {
             Ok(_) => true,
             Err(_) => false,
@@ -189,19 +206,19 @@ impl Post {
     /// ```
     pub async fn delete_post_id(id: i32) -> bool {
         let pool: sqlx::PgPool = get_db_pool().await.unwrap();
-        let result = sqlx::query("DELETE FROM Posts
-        WHERE id = $1")
-            .bind(id)
-            .execute(&pool)
-            .await;
+        let result = sqlx::query(
+            "DELETE FROM Posts
+        WHERE id = $1",
+        )
+        .bind(id)
+        .execute(&pool)
+        .await;
         match result {
             Ok(_) => true,
             Err(_) => false,
         }
     }
-
 }
-
 
 #[cfg(test)]
 mod tests {
