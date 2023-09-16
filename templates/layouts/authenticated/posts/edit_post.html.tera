@@ -106,7 +106,7 @@
         .then(data => {
             console.log('Success:', data);
             let message = data;
-            statusMessageDiv.innerHTML = message;
+            statusMessageDiv.innerHTML = message.message;
             statusMessageDiv.classList.add('text-green-500');
             statusMessageDiv.classList.remove('text-red-500');
         })
