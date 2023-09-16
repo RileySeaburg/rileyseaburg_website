@@ -41,8 +41,8 @@
                     class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
             </div>
             <div class="flex flex-col mt-4">
-                <label for="content" class="text-gray-700 text-base mb-2">Content</label>
-                <textarea id="content" name="content"
+                <label for="post-content" class="text-gray-700 text-base mb-2">Content</label>
+                <textarea id="post-content" name="content"
                     class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm h-64"></textarea>
             </div>
             <div class="flex flex-col mt-4">
@@ -62,48 +62,31 @@
 </div>
 
 <script>
-    let tags = [];
-    let title = document.querySelector('#title').addEventListener('change', (e) => {
-        e.preventDefault();
-        title = e.target.value;
-       
-    });
-    let author = document.querySelector('#author').addEventListener('change', (e) => {
-        e.preventDefault();
-        author = e.target.value;
-    });
-    let content = document.querySelector('#content').addEventListener('change', (e) => {
-        e.preventDefault();
-        content = e.target.value;
-      
-    });
-    let status = document.querySelector('#status').addEventListener('change', (e) => {
-        e.preventDefault();
-        status = e.target.value;
-    });
-    let image_url = document.querySelector('#image_url').addEventListener('change', (e) => {
-        e.preventDefault();
-        image_url = e.target.value;
-    });
-    let category = document.querySelector('#category').addEventListener('change', (e) => {
-        e.preventDefault();
-        category = e.target.value;
-    });
-    let slug= document.querySelector('#slug').addEventListener('change', (e) => {
-        e.preventDefault();
-        slug = e.target.value;
-    });
-    let tagsString = document.querySelector('#tags').addEventListener('change', (e) => {
-        e.preventDefault();
-        tags = e.target.value.split(',');
-    });
 
     let statusMessageDiv = document.querySelector('#status-message');
-
     let date = new Date();
     let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
 
     document.querySelector('#createButton').addEventListener('click', function () {
+        // Directly access the field values here
+        let title = document.querySelector('#title').value;
+        let author = document.querySelector('#author').value;
+        let content = document.querySelector('#post-content').value;
+        let status = document.querySelector('#status').value;
+        let image_url = document.querySelector('#image_url').value;
+        let category = document.querySelector('#category').value;
+        let slug = document.querySelector('#slug').value;
+        let tags = document.querySelector('#tags').value.split(',');
+
+        console.log("Title:", title);
+        console.log("Author:", author);
+        console.log("Content:", content);
+        console.log("Status:", status);
+        console.log("Image URL:", image_url);
+        console.log("Category:", category);
+        console.log("Slug:", slug);
+        console.log("Tags:", tags);
+
 
         let post = {
             author: author,
@@ -142,11 +125,13 @@
                 statusMessageDiv.innerHTML = 'Error creating post!';
                 statusMessageDiv.classList.add('text-red-500');
                 statusMessageDiv.classList.remove('text-green-500');
-            }).then(() => {
+            })
+            .then(() => {
                 setTimeout(() => {
                     window.location.href = '/blog';
                 }, 5000);
-            });
+            })
+            ;
     });
 </script>
 
