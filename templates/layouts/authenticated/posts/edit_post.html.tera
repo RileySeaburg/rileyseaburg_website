@@ -22,8 +22,8 @@
             </div>
         </div>
         <div class="flex flex-col mt-4">
-            <label for="content" class="text-gray-700 text-base mb-2">Content</label>
-            <textarea id="content" name="content" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm 
+            <label for="content-area" class="text-gray-700 text-base mb-2">Content</label>
+            <textarea id="content-area" name="content" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm 
                 h-304 lg:h-64">{{post.content}}</textarea>
         </div>
 
@@ -47,59 +47,53 @@
 </div>
 
 <script>
-    var tags = [];
+    let postTags = [];
     {% if post.tags %}
     {% for tag in post.tags %}
-    tags.push('{{tag}}');
+    postTags.push('{{tag}}');
     {% endfor %}
     {% endif %}
 
-let url = "";
+    let titleElem = document.querySelector('#title');
+    let authorElem = document.querySelector('#author');
+    let contentElem = document.querySelector('#content-area');
+    let urlElem = document.querySelector('#image_url');
+    let statusMessageDiv = document.querySelector('#status-message');
 
-    let title = document.querySelector('#title').addEventListener('change', (e) => {
+    titleElem.addEventListener('change', (e) => {
         e.preventDefault();
-        title = document.querySelector('#title').value;
     });
-    let author = document.querySelector('#author').addEventListener('change', (e) => {
+
+    authorElem.addEventListener('change', (e) => {
         e.preventDefault();
-        author = document.querySelector('#author').value;
     });
-    let textArea = document.querySelector('textarea').addEventListener('change', (e) => {
+
+    contentElem.addEventListener('change', (e) => {
         e.preventDefault();
-        content = document.querySelector('textarea').value;
     });
-    let url_input = document.querySelector('#image_url').addEventListener('change', (e) => {
+
+    urlElem.addEventListener('change', (e) => {
         e.preventDefault();
-        url = url_input.value;
-    })
+    });
 
     document.querySelector('#updateButton').addEventListener('click', function () {
-        console.log("Content: " + content);
-
-        let statusMessageDiv = document.querySelector('#status-message');
-
-
         let post = {
-            id: {{ post.id }},
-            author: author,
-            title: title,
-            content: textArea,
-            tags: tags,
-            publish_date: '{{post.publish_date}}',
-            status: '{{post.status}}',
-            image_url: url,
-            category: '{{post.category}}',
-            created_at: '{{post.created_at}}',
-            updated_at: '{{post.updated_at}}',
-            slug: '{{post.slug}}'
+            id: {{ post.id }
+    },
+        author: authorElem.value,
+        title: titleElem.value,
+        content: contentElem.value,
+        tags: postTags,
+        publish_date: '{{post.publish_date}}',
+        status: '{{post.status}}',
+        image_url: urlElem.value,
+        category: '{{post.category}}',
+        created_at: '{{post.created_at}}',
+        updated_at: '{{post.updated_at}}',
+        slug: '{{post.slug}}'
         };
 
-
-
-
-
     const jsonPost = JSON.stringify(post);
-
     console.log(jsonPost);
 
     fetch("/posts/{{post.slug}}/update", {
@@ -112,7 +106,7 @@ let url = "";
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            let message = data
+            let message = data;
             statusMessageDiv.innerHTML = message;
             statusMessageDiv.classList.add('text-green-500');
             statusMessageDiv.classList.remove('text-red-500');
@@ -127,6 +121,7 @@ let url = "";
 
     });
 </script>
+
 
 
 {% endblock authenticated_content %}
