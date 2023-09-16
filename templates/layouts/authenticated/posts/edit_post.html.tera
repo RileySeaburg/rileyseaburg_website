@@ -78,19 +78,18 @@
 
     document.querySelector('#updateButton').addEventListener('click', function () {
         let post = {
-            id: {{ post.id }
-    },
-        author: authorElem.value,
-        title: titleElem.value,
-        content: contentElem.value,
-        tags: postTags,
-        publish_date: '{{post.publish_date}}',
-        status: '{{post.status}}',
-        image_url: urlElem.value,
-        category: '{{post.category}}',
-        created_at: '{{post.created_at}}',
-        updated_at: '{{post.updated_at}}',
-        slug: '{{post.slug}}'
+            id: {{ post.id }},
+            author: authorElem.value,
+            title: titleElem.value,
+            content: contentElem.value,
+            tags: postTags,
+            publish_date: '{{post.publish_date}}',
+            status: '{{post.status}}',
+            image_url: urlElem.value,
+            category: '{{post.category}}',
+            created_at: '{{post.created_at}}',
+            updated_at: '{{post.updated_at}}',
+            slug: '{{post.slug}}'
         };
 
     const jsonPost = JSON.stringify(post);
