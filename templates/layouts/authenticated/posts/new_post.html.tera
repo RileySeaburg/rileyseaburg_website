@@ -63,6 +63,28 @@
 
 <script>
 
+    document.addEventListener("DOMContentLoaded", function () {
+            // Get the title and slug input elements
+            let titleInput = document.querySelector('#title');
+            let slugInput = document.querySelector('#slug');
+
+            // Add event listener to the title input field
+            titleInput.addEventListener('input', function () {
+                slugInput.value = createSlug(this.value);
+            });
+
+            // Function to convert a string into a slug
+            function createSlug(text) {
+                return text.toString().toLowerCase()
+                    .replace(/\s+/g, '-')           // Replace spaces with -
+                    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                    .replace(/^-+/, '')             // Trim - from start of text
+                    .replace(/-+$/, '');            // Trim - from end of text
+            }
+        });
+
+
     let statusMessageDiv = document.querySelector('#status-message');
     let date = new Date();
     let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
