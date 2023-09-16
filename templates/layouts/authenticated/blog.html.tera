@@ -177,9 +177,5 @@
 
 </script>
 
-<!-- ... Other HTML code ... -->
-
-
-
 
 {% endblock authenticated_content %}

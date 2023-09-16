@@ -9,7 +9,10 @@
     </head>
 
     <body id='app' class='h-full'>
-        {% include 'components/navbar.html.tera'%}
+<!--        navbar needs to be static-->
+<div class="sticky top-0 z-50">
+    {% include 'components/navbar.html.tera'%}
+</div>
         <div id='content'>{% block content %}{% endblock content %}</div>
         <div id='footer'>
             {% block footer %}

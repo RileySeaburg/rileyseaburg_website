@@ -7,8 +7,8 @@
                     {% else %}
                     <a href='/'>
                         <span class='sr-only'>Your Company</span>
-                        <img class='h-8 w-auto h-10'
-                            src='https://tailwindui.com/img/logos/mark.svg?from-color=teal&from-shade=200&to-color=cyan&to-shade=400&toShade=400'
+                        <img class='w-auto h-16'
+                            src='/images/icon-light.png'
                             alt=''>
                     </a>
                     <div class='-mr-2 flex items-center md:hidden'>

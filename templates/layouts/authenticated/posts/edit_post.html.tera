@@ -4,47 +4,47 @@
 {% block authenticated_content %}
 {{ super() }}
 
-<div class="flex flex-col">
-    <div class="flex flex-row justify-between">
-        <h1 class="text-4xl text-5xl lg:text-6xl font-extrabold leading-none mb-4">Edit Post {{post.id}}</h1>
+<div class="flex flex-col mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 mt-10 mb-20 space-y-8">
+    <div class="flex flex-row ">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900">Edit Post {{post.id}}</h1>
     </div>
-    <form>
-        <div class="flex flex-col md:flex-row md:justify-between">
-            <div class="flex flex-col">
-                <label for="title" class="text-gray-700 text-base mb-2">Title</label>
+    <form class="space-y-6">
+        <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div class="flex flex-col w-full md:w-1/2">
+                <label for="title" class="text-gray-700 text-lg mb-1">Title</label>
                 <input id="title" name="title" type="text" value="{{post.title}}"
-                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                       class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2">
             </div>
-            <div class="flex flex-col">
-                <label for="author" class="text-gray-700 text-base mb-2">Author</label>
+            <div class="flex flex-col w-full md:w-1/2">
+                <label for="author" class="text-gray-700 text-lg mb-1">Author</label>
                 <input id="author" name="author" type="text" value="{{post.author}}"
-                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                       class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2">
             </div>
         </div>
-        <div class="flex flex-col mt-4">
-            <label for="content-area" class="text-gray-700 text-base mb-2">Content</label>
-            <textarea id="content-area" name="content" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm 
-                h-304 lg:h-64">{{post.content}}</textarea>
+        <div class="flex flex-col space-y-2">
+            <label for="content-area" class="text-gray-700 text-lg">Content</label>
+            <textarea id="content-area" name="content"
+                      class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm p-2 h-64">{{post.content}}</textarea>
         </div>
-
-        <div class="flex flex-col mt-4">
-            <label for="image_url" class="text-gray-700 text-base mb-2" >Image URL</label>
+        <div class="flex flex-col space-y-2">
+            <label for="image_url" class="text-gray-700 text-lg">Image URL</label>
             <input id="image_url" name="image_url" type="text" value="{{post.image_url}}"
-                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-        </div>
-        <div class="flex flex-col mt-4">
-
+                   class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2">
         </div>
     </form>
-    <div class="flex flex-row mt-4">
+
+    <div class="flex flex-row gap-4 justify-center items-center">
         <button id="updateButton"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-base">Update</button>
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">Update</button>
         <a href="{{ delete_url }}"
-            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded  text-base">Delete
-            Post</a>
-        <div id="status-message" class="ml-4"></div>
+           class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">Delete Post</a>
+        <button id="cancelButton"
+                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">Cancel</button>
+        <div id="status-message" class="ml-4 text-indigo-600"></div>
     </div>
 </div>
+
+
 
 <script>
     let postTags = [];
@@ -118,6 +118,11 @@
             statusMessageDiv.classList.remove('text-green-500');
         });
 
+    });
+
+
+    document.querySelector('#cancelButton').addEventListener('click', function () {
+        window.location.href = "/posts/{{post.slug}}";
     });
 </script>
 
