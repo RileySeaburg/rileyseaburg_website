@@ -35,5 +35,5 @@ llm = "0.1.1"
 rml_rtmp = "0.8.0"
 uuid = {version = "1.4.1", features = ["v4"]}
 [dependencies.sqlx]
-features = ["postgres", "macros", "chrono", "json", "uuid", "offline"]
-version = "0.6.2"
+features = ["postgres", "macros", "chrono", "json", "uuid", "runtime-tokio"]
+version = "0.7.2"
