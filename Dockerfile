@@ -1,5 +1,13 @@
-# Use an official Rust runtime as a parent image
-FROM rust:latest as builder
+# Use a newer base image for building
+FROM debian:bullseye-slim as builder
+
+# Install Rust
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# Add Rust to PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Set the current working directory inside the container
 WORKDIR /usr/src/rileyseaburg_website
@@ -8,17 +16,13 @@ WORKDIR /usr/src/rileyseaburg_website
 COPY . .
 
 # Install required dependencies including libpq, OpenSSL, lld, and clang
-RUN apt-get update && \
-    apt-get install -y libpq-dev openssl pkg-config lld clang && \
+RUN apt-get install -y libpq-dev openssl pkg-config lld clang && \
     rm -rf /var/lib/apt/lists/*
 
-# Create a dummy main.rs to build dependencies and cache them
-RUN mkdir -p src && echo "fn main() {}" > src/main.rs
+# Build the Rust project with verbose output
+RUN cargo build --release -v
 
-# Build the Rust project
-RUN cargo build --release
-
-# Use a newer base image for the final build
+# Use the same newer base image for the final build
 FROM debian:bullseye-slim
 
 # Install runtime dependencies
