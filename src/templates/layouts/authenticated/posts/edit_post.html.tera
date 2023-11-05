@@ -1,0 +1,131 @@
+{% extends 'layouts/authenticated.html.tera' %}
+{% block title %}Edit Post {{post.id}}{% endblock title %}
+
+{% block authenticated_content %}
+{{ super() }}
+
+<div class="flex flex-col mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 mt-10 mb-20 space-y-8">
+    <div class="flex flex-row ">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900">Edit Post {{post.id}}</h1>
+    </div>
+    <form class="space-y-6">
+        <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div class="flex flex-col w-full md:w-1/2">
+                <label for="title" class="text-gray-700 text-lg mb-1">Title</label>
+                <input id="title" name="title" type="text" value="{{post.title}}"
+                       class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2">
+            </div>
+            <div class="flex flex-col w-full md:w-1/2">
+                <label for="author" class="text-gray-700 text-lg mb-1">Author</label>
+                <input id="author" name="author" type="text" value="{{post.author}}"
+                       class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2">
+            </div>
+        </div>
+        <div class="flex flex-col space-y-2">
+            <label for="content-area" class="text-gray-700 text-lg">Content</label>
+            <textarea id="content-area" name="content"
+                      class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm p-2 h-64">{{post.content}}</textarea>
+        </div>
+        <div class="flex flex-col space-y-2">
+            <label for="image_url" class="text-gray-700 text-lg">Image URL</label>
+            <input id="image_url" name="image_url" type="text" value="{{post.image_url}}"
+                   class="border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md shadow-sm w-full p-2">
+        </div>
+    </form>
+
+    <div class="flex flex-row gap-4 justify-center items-center">
+        <button id="updateButton"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">Update</button>
+        <a href="{{ delete_url }}"
+           class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">Delete Post</a>
+        <button id="cancelButton"
+                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">Cancel</button>
+        <div id="status-message" class="ml-4 text-indigo-600"></div>
+    </div>
+</div>
+
+
+
+<script>
+    let postTags = [];
+    {% if post.tags %}
+    {% for tag in post.tags %}
+    postTags.push('{{tag}}');
+    {% endfor %}
+    {% endif %}
+
+    let titleElem = document.querySelector('#title');
+    let authorElem = document.querySelector('#author');
+    let contentElem = document.querySelector('#content-area');
+    let urlElem = document.querySelector('#image_url');
+    let statusMessageDiv = document.querySelector('#status-message');
+
+    titleElem.addEventListener('change', (e) => {
+        e.preventDefault();
+    });
+
+    authorElem.addEventListener('change', (e) => {
+        e.preventDefault();
+    });
+
+    contentElem.addEventListener('change', (e) => {
+        e.preventDefault();
+    });
+
+    urlElem.addEventListener('change', (e) => {
+        e.preventDefault();
+    });
+
+    document.querySelector('#updateButton').addEventListener('click', function () {
+        let post = {
+            id: {{ post.id }},
+            author: authorElem.value,
+            title: titleElem.value,
+            content: contentElem.value,
+            tags: postTags,
+            publish_date: '{{post.publish_date}}',
+            status: '{{post.status}}',
+            image_url: urlElem.value,
+            category: '{{post.category}}',
+            created_at: '{{post.created_at}}',
+            updated_at: '{{post.updated_at}}',
+            slug: '{{post.slug}}'
+        };
+
+    const jsonPost = JSON.stringify(post);
+    console.log(jsonPost);
+
+    fetch("/posts/{{post.slug}}/update", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonPost
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            let message = data;
+            statusMessageDiv.innerHTML = message.message;
+            statusMessageDiv.classList.add('text-green-500');
+            statusMessageDiv.classList.remove('text-red-500');
+        })
+        .catch((error) => {
+            var parsedError = JSON.parse(error);
+            console.error('Error:', parsedError.message);
+            statusMessageDiv.innerHTML = error;
+            statusMessageDiv.classList.add('text-red-500');
+            statusMessageDiv.classList.remove('text-green-500');
+        });
+
+    });
+
+
+    document.querySelector('#cancelButton').addEventListener('click', function () {
+        window.location.href = "/posts/{{post.slug}}";
+    });
+</script>
+
+
+
+{% endblock authenticated_content %}

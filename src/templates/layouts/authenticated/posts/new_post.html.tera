@@ -1,0 +1,160 @@
+{% extends 'layouts/authenticated.html.tera' %}
+{% block title %}Edit Post {{post.id}}{% endblock title %}
+
+{% block authenticated_content %}
+{{ super() }}
+
+<div class="flex flex-col">
+    <div class="flex flex-row justify-between">
+        <h1 class="text-4xl text-5xl lg:text-6xl font-extrabold leading-none mb-4">Create New Post</h1>
+    </div>
+    <form>
+        <div class="flex flex-col">
+            <div class="flex flex-col">
+                <label for="title" class="text-gray-700 text-base mb-2">Title</label>
+                <input id="title" name="title" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="author" class="text-gray-700 text-base mb-2">Author</label>
+                <input id="author" name="author" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="status" class="text-gray-700 text-base mb-2">Status</label>
+                <input id="status" name="status" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="image_url" class="text-gray-700 text-base mb-2">Image URL</label>
+                <input id="image_url" name="image_url" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="category" class="text-gray-700 text-base mb-2">Category</label>
+                <input id="category" name="category" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="slug" class="text-gray-700 text-base mb-2">Slug</label>
+                <input id="slug" name="slug" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="post-content" class="text-gray-700 text-base mb-2">Content</label>
+                <textarea id="post-content" name="content"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm h-64"></textarea>
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="tags" class="text-gray-700 text-base mb-2">Tags (comma-separated)</label>
+                <input id="tags" name="tags" type="text"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+        </div>
+    </form>
+    <div class="flex flex-row mt-4">
+        <button id="createButton"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+        <a href="/blog" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Discard
+            Post</a>
+        <div id="status-message" class="ml-4"></div>
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+            // Get the title and slug input elements
+            let titleInput = document.querySelector('#title');
+            let slugInput = document.querySelector('#slug');
+
+            // Add event listener to the title input field
+            titleInput.addEventListener('input', function () {
+                slugInput.value = createSlug(this.value);
+            });
+
+            // Function to convert a string into a slug
+            function createSlug(text) {
+                return text.toString().toLowerCase()
+                    .replace(/\s+/g, '-')           // Replace spaces with -
+                    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                    .replace(/^-+/, '')             // Trim - from start of text
+                    .replace(/-+$/, '');            // Trim - from end of text
+            }
+        });
+
+
+    let statusMessageDiv = document.querySelector('#status-message');
+    let date = new Date();
+    let formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
+
+    document.querySelector('#createButton').addEventListener('click', function () {
+        // Directly access the field values here
+        let title = document.querySelector('#title').value;
+        let author = document.querySelector('#author').value;
+        let content = document.querySelector('#post-content').value;
+        let status = document.querySelector('#status').value;
+        let image_url = document.querySelector('#image_url').value;
+        let category = document.querySelector('#category').value;
+        let slug = document.querySelector('#slug').value;
+        let tags = document.querySelector('#tags').value.split(',');
+
+        console.log("Title:", title);
+        console.log("Author:", author);
+        console.log("Content:", content);
+        console.log("Status:", status);
+        console.log("Image URL:", image_url);
+        console.log("Category:", category);
+        console.log("Slug:", slug);
+        console.log("Tags:", tags);
+
+
+        let post = {
+            author: author,
+            title: title,
+            content: content,
+            tags: tags,
+            publish_date: formattedDate,
+            status: status,
+            image_url: image_url,
+            category: category,
+            created_at: formattedDate,
+            updated_at: formattedDate,
+            slug: slug
+        };
+
+        const jsonPost = JSON.stringify(post);
+
+        console.log(jsonPost);
+
+        fetch("/post/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonPost
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                statusMessageDiv.innerHTML = 'Post created successfully!';
+                statusMessageDiv.classList.add('text-green-500');
+                statusMessageDiv.classList.remove('text-red-500');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                statusMessageDiv.innerHTML = 'Error creating post!';
+                statusMessageDiv.classList.add('text-red-500');
+                statusMessageDiv.classList.remove('text-green-500');
+            })
+            .then(() => {
+                setTimeout(() => {
+                    window.location.href = '/blog';
+                }, 5000);
+            })
+            ;
+    });
+</script>
+
+{% endblock authenticated_content %}
