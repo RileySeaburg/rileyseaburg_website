@@ -49,76 +49,41 @@ fn date_time_format(value: &Value, args: &HashMap<String, Value>) -> TeraResult<
         .map_err(|_| tera::Error::msg("Error converting formatted date to value"))
 }
 
-fn get_value_from_env_with_key(key: String) -> Result<String, Box<dyn std::error::Error>> {
-    let key_value_from_env = env::var(key)?;
-    if key_value_from_env == "SECRET_KEY" {
-        if key_value_from_env.len() < 32 {
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                "Secret key must be at least 32 characters",
-            )));
-        }
-        return Ok(key_value_from_env);
+fn get_secret_key() -> Result<Key, Box<dyn std::error::Error>> {
+    let secret_key_from_env = env::var("SECRET_KEY")?;
+    if secret_key_from_env.len() < 32 {
+        return Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            "Secret key must be at least 32 characters",
+        )));
     }
-
-    Ok(key_value_from_env)
+    let key = Key::from(secret_key_from_env.as_bytes());
+    Ok(key)
 }
 
-fn load_encrypted_private_key() -> PKey<Private> {
-    let path_production: String = "/etc/letsencrypt/live/rileyseaburg.com/privkey.pem".to_string();
-    let path_development: String = "key.pem".to_string();
-
-    let key: String = if env::var("ENV").unwrap().to_string().to_ascii_lowercase() == "production" {
-        path_production.clone()
-    } else {
-        path_development
-    };
-
-    let mut file = File::open(key).expect("Failed to open file");
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer).expect("Failed to read file");
-
-    PKey::private_key_from_pem_passphrase(&buffer, b"").unwrap()
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv().ok();
-
-    let enviornment = get_value_from_env_with_key("ENV".to_string()).unwrap();
-    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
-    builder
-        .set_private_key(&load_encrypted_private_key())
-        .unwrap();
-
-    let uri = if enviornment == "production" {
-        "0.0.0.0:80"
-    } else {
-        "localhost:8080"
-    };
-
     dotenv::dotenv().ok();
+
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("debug")).init();
 
     let database = web::Data::new(Database::get_database_from_rustyroad_toml().unwrap());
 
-    log::info!("starting HTTPS server at https://rileyseaburg.com/");
+    println!("Starting Actix web server...");
 
     HttpServer::new(move || {
-        let mut tera = Tera::new("templates/**/*").unwrap();
-        tera.register_filter("date_time_format", date_time_format);
-        tera.register_filter("markdown", markdown_filter);
+        // Load tera views from the specified directory
+        let tera = Tera::new("src/views/**/*").unwrap();
         println!("Initializing Actix web application...");
 
-        let secret_key = Key::from(
-            get_value_from_env_with_key("SECRET_KEY".to_string())
-                .unwrap()
-                .as_bytes(),
-        );
+        let secret_key = get_secret_key().unwrap();
 
         let session_mw = SessionMiddleware::builder(CookieSessionStore::default(), secret_key)
+            // disable secure cookie for local testing
             .cookie_secure(false)
             .build();
+
 
         App::new()
             .wrap(
@@ -154,8 +119,8 @@ async fn main() -> std::io::Result<()> {
             .service(routes::webinar::webinar_live)
             .service(Files::new("/", "./static"))
     })
-    .bind(uri)
-    .expect("yo")
+    .bind(("0.0.0.0", 80))
+    .unwrap()
     .workers(2)
     .run()
     .await
