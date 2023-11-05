@@ -43,14 +43,7 @@ COPY --from=builder /usr/src/rileyseaburg_website/target/release/rileyseaburg_we
 COPY --from=builder /usr/src/rileyseaburg_website/.env /app/.env
 COPY --from=builder /usr/src/rileyseaburg_website/rustyroad.toml  /app/rustyroad.toml
 COPY --from=builder /usr/src/rileyseaburg_website/static /app/static
-COPY --from=builder /usr/src/rileyseaburg_website/templates/pages /app/pages
-COPY --from=builder /usr/src/rileyseaburg_website/templates/components /app/components
-COPY --from=builder /usr/src/rileyseaburg_website/templates/layouts /app/layouts
-COPY --from=builder /usr/src/rileyseaburg_website/templates/sections /app/sections
-COPY --from=builder /usr/src/rileyseaburg_website/templates/base.html.tera /app/base.html.tera
-
-
-
+COPY --from=builder /usr/src/rileyseaburg_website/templates /app/templates
 
 # Set the command to run your application
 CMD ["./rileyseaburg_website"]
