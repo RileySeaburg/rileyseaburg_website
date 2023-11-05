@@ -22,27 +22,5 @@ COPY . .
 RUN apt-get install -y libpq-dev openssl libssl-dev pkg-config lld clang && \
     rm -rf /var/lib/apt/lists/*
 
-# Build the Rust project with verbose output
-RUN cargo build --release -v
-
-# Use the same newer base image for the final build
-FROM debian:bullseye-slim
-
-# Install runtime dependencies
-RUN apt-get update && \
-    apt-get install -y libpq5 openssl && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set the working directory for the second stage of the build
-WORKDIR /app
-
-# Copy the binary from the builder stage to the final image
-COPY --from=builder /usr/src/rileyseaburg_website/target/release/rileyseaburg_website /app/rileyseaburg_website
-
-# Copy the .env file from the builder stage to the final image
-COPY --from=builder /usr/src/rileyseaburg_website/.env /app/.env
-COPY --from=builder /usr/src/rileyseaburg_website/rustyroad.toml  /app/rustyroad.toml
-COPY --from=builder /usr/src/rileyseaburg_website/static /app/static
-
-# Set the command to run your application
-CMD ["./rileyseaburg_website"]
+# Run Cargo Run
+CMD ["cargo", "run"]
