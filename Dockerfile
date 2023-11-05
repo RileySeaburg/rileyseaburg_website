@@ -12,11 +12,14 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Set the current working directory inside the container
 WORKDIR /usr/src/rileyseaburg_website
 
+# Create an .env file with a SECRET_KEY of at least 100 characters
+RUN echo "SECRET_KEY=$(openssl rand -base64 100)" > .env
+
 # Copy the current directory contents into the container
 COPY . .
 
 # Install required dependencies including libpq, OpenSSL, lld, and clang
-RUN apt-get install -y libpq-dev openssl pkg-config lld clang && \
+RUN apt-get install -y libpq-dev openssl libssl-dev pkg-config lld clang && \
     rm -rf /var/lib/apt/lists/*
 
 # Build the Rust project with verbose output
@@ -32,6 +35,9 @@ RUN apt-get update && \
 
 # Copy the binary from the builder stage to the final image
 COPY --from=builder /usr/src/rileyseaburg_website/target/release/rileyseaburg_website /usr/local/bin/
+
+# Copy the .env file from the builder stage to the final image
+COPY --from=builder /usr/src/rileyseaburg_website/.env ./
 
 # Set the command to run your application
 CMD ["rileyseaburg_website"]
