@@ -75,6 +75,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         // Load tera views from the specified directory
         let tera = Tera::new("src/templates/**/*").unwrap();
+        tera.register_filter("date_time_format", date_time_format);
+        tera.register_filter("markdown", markdown_filter);
         println!("Initializing Actix web application...");
 
         let secret_key = get_secret_key().unwrap();
